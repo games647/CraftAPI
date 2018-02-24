@@ -19,6 +19,7 @@ import java.awt.image.RenderedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -60,11 +61,7 @@ public class MojangResolver implements AuthResolver {
         String url = String.format(HAS_JOINED_URL, username, serverHash, encodedIp);
 
         HttpURLConnection conn = getConnection(url);
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))
-        ) {
-            return gson.fromJson(reader, VerificationResponse.class);
-        }
+        return readJson(conn.getInputStream(), VerificationResponse.class);
     }
 
     @Override
@@ -78,11 +75,8 @@ public class MojangResolver implements AuthResolver {
             writer.append(gson.toJson(new AuthRequest(email, password)));
         }
 
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
-            AuthResponse authResponse = gson.fromJson(reader, AuthResponse.class);
-            return new Account(authResponse.getSelectedProfile(), authResponse.getAccessToken());
-        }
+        AuthResponse authResponse = readJson(conn.getInputStream(), AuthResponse.class);
+        return new Account(authResponse.getSelectedProfile(), authResponse.getAccessToken());
     }
 
     @Override
@@ -133,6 +127,7 @@ public class MojangResolver implements AuthResolver {
     @Override
     public Optional<Profile> findProfile(String name) throws IOException, RateLimitException {
         HttpURLConnection conn = getConnection(UUID_URL + name);
+
         int responseCode = conn.getResponseCode();
         if (responseCode == RateLimitException.RATE_LIMIT_RESPONSE_CODE) {
             throw new RateLimitException();
@@ -142,12 +137,8 @@ public class MojangResolver implements AuthResolver {
             return Optional.empty();
         }
 
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))
-        ) {
-            Profile profile = gson.fromJson(reader, Profile.class);
-            return Optional.of(profile);
-        }
+        Profile profile = readJson(conn.getInputStream(), Profile.class);
+        return Optional.of(profile);
     }
 
     @Override
@@ -160,15 +151,24 @@ public class MojangResolver implements AuthResolver {
         String url = String.format(SKIN_URL, UUIDAdapter.toMojangId(uuid));
         HttpURLConnection conn = getConnection(url);
 
-        if (conn.getResponseCode() == HttpURLConnection.HTTP_NO_CONTENT) {
+        int responseCode = conn.getResponseCode();
+        if (responseCode == RateLimitException.RATE_LIMIT_RESPONSE_CODE) {
+            throw new RateLimitException();
+        }
+
+        if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
             return Optional.empty();
         }
 
+        TexturesModel texturesModel = readJson(conn.getInputStream(), TexturesModel.class);
+        return Optional.of(texturesModel);
+    }
+
+    private <T> T readJson(InputStream inputStream, Class<T> classOfT) throws IOException {
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))
+                new InputStreamReader(inputStream, StandardCharsets.UTF_8))
         ) {
-            TexturesModel texturesModel = gson.fromJson(reader, TexturesModel.class);
-            return Optional.of(texturesModel);
+            return gson.fromJson(reader, classOfT);
         }
     }
 
