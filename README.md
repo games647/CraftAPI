@@ -13,13 +13,13 @@ contributions. Furthermore this project is used for experimenting with Unit-Test
 * Usage of modern Java 8 features
 * UUID and skin querying
 * Skin changing
+* Multiple outgoing source IPs
 * Throws exceptions to let the user decide how to handle errors
 
 ## Planned
 
 * Default implementation for in-memory cache
 * Custom HTTP proxies
-* Multiple outgoing source IPs
 * Service registration for Bukkit and Sponge
 * HTTP request interceptor to redirect to this library
 * Wait a customizable interval for sending bulk requests (although this increases latency)

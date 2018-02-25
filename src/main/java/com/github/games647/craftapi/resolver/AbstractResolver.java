@@ -14,13 +14,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Predicate;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public abstract class AbstractResolver {
 
@@ -28,6 +32,7 @@ public abstract class AbstractResolver {
     private static final String USER_AGENT = "CraftAPIClient";
 
     protected final Predicate<String> validNamePredicate = new NamePredicate();
+    protected final BalancedSSLFactory sslFactory = new BalancedSSLFactory();
 
     protected final Gson gson = new GsonBuilder()
             .registerTypeAdapter(UUID.class, new UUIDAdapter())
@@ -65,13 +70,19 @@ public abstract class AbstractResolver {
     }
 
     protected HttpURLConnection getConnection(String url, Proxy proxy) throws IOException {
-        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection(proxy);
+        HttpsURLConnection conn = (HttpsURLConnection) new URL(url).openConnection(proxy);
 
         conn.setConnectTimeout(TIMEOUT);
         conn.setReadTimeout(2 * TIMEOUT);
 
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setRequestProperty("User-Agent", USER_AGENT);
+
+        conn.setSSLSocketFactory(sslFactory);
         return conn;
+    }
+
+    public void setOutgoingAddresses(Collection<InetAddress> addresses) {
+        sslFactory.setOutgoingAddresses(addresses);
     }
 }
