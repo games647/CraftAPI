@@ -25,23 +25,23 @@ public class SkinPropertyTest {
     private static final int KEY_SIZE = 4096;
     private static final String MOJANG_KEY_PATH = "/yggdrasil_session_pubkey.der";
 
-    private static final String SLIM_VALUE = "eyJ0aW1lc3RhbXAiOjE1MTcwNTUyNjIxODgsInByb2ZpbGVJZCI6Ijc4YzNhNGU4MzdlNDQ" +
-            "4MTg5ZGY4ZjljZTYxYzVlZmNjIiwicHJvZmlsZU5hbWUiOiJSYXNob21vbl8iLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHV" +
-            "yZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzE3MzU2N2VhNzJhZDRhMjJiZjc" +
-            "wYmNiYTVmZWQzYjhiOWVhMDI0NjM5MTMxYmRkODYzYzI1ZDIyZjg5IiwibWV0YWRhdGEiOnsibW9kZWwiOiJzbGltIn19fX0=";
-    private static final String SLIM_SIGNATURE = "X3pND0qkG0IEPBIgeYem7OmghO0LPV3J39LKWd3HinZQeJjGcmRbkvFXBaeYV0Vl8CZ" +
-            "ub8/dHQbgUtPnnWL5J0x8KLRFVp9p3uuWxbGbx8efN6SAE98uC7xbphTLxBtNNKbCTOwNDhI8WfRdf3LaKLNhdPi1qSMzQvTaV9q8eYK" +
-            "wdnwJ7DPCQrcPHvlZwnxLH6iIn3nPXuMzTu7aWRKF2IwGZ72Pa3X1RWy4QHtOPuZY6DKJxQK1hkbD1YNhjWnQ/8o/OJaiTmlZM0rWrjM" +
-            "YCZdYcCpeeFV+gsRHuhBG9LHz7hePJvysAo005py3ydr+3PUi3ISsVYFJ9ygJqIgbqKjov8+zVfnAZHusQMdBaoDlH05sae5gAGai5zM" +
-            "Ta7UwObMfsqlHTNA+Ch9kAJQ2WmYqJZeAZgrGw8MkF23zMRKMZKqLtwCdiwJfiAgtJy148+HbtZuyi3obNcS+hn9gxn5LaGC+NUOCxXH" +
-            "DbCF4xN+on1/kLgyje7TjTUQnMAs5CWRWulVnt3aOOon0mUk2xMkv6B6WwW1n0MAU2jbhhp3s/cEQFrdr1f5IMLQ/OEXo2u5PPbHzyUI" +
-            "So0JhuZQLNNUG2ZuLpi+eo3DccfOM/HllaBPOuA5rHU46slTgxI4edTKsG+C2vbUSFo1+vq4TFyEkoY2G0I6aRWVpDQosAxw=";
+    public static final String SLIM_VALUE = "eyJ0aW1lc3RhbXAiOjE1MTk1NTI3OTgyMzIsInByb2ZpbGVJZCI6Ijc4YzNhNGU4MzdlNDQ4" +
+            "MTg5ZGY4ZjljZTYxYzVlZmNjIiwicHJvZmlsZU5hbWUiOiJGMGdneU1vbnN0M3IiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4" +
+            "dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzUyODQ3YmEzZWI2NTZlN2Fj" +
+            "NjlmMmFmOWNlYzU4ZDRlYzJmNWEyZWE3ZTE4OTY4Yzk3OTA3ZTg3ZWZhOWNjNCIsIm1ldGFkYXRhIjp7Im1vZGVsIjoic2xpbSJ9fX19";
+    public static final String SLIM_SIGNATURE = "cTReAPaFI7iikV5L1w8HQUDlOfiWrne0UZ3Chn+HAIIzKD7KH83mgISzmFQB0k3lAvSp" +
+            "Yx1DlGFlrVYKqLWsPOr0Az9HAmYJ+Jwq656YRiwdYqmAKBS63uoV0ZijtCZJCN8MexOmz+ScmFd75/WwbYz3g60hk35kHpFlGPxVcXJM" +
+            "8+8bmVl3fUS4oTUYEFbFvyOufBFVekEgmC2xL7kSrkpAO6BT+F5bmJig41/JC2X5wb3eKO/DowwpYg/EKc162PI0i/9nKXBhTm6l7zhd" +
+            "2tx/N8vQjg3ydQO6H7UG/Q0LIevCo88kQle2s40HWYpsUbx6GLLwG/3lCUvhPLyCOxLfNjgaEhjpxGIAVUKylluwxbosuNDXUsGaMlR6" +
+            "zY6JqN1gl1syh4Alem3U0hjuFDD7QWMUnuG/utefmygd/DO8zyXUqFIFmvMFroblIeDW/cmKQTDDWdHdGZ5UG6xKrkuv1zDUa6uq/RfY" +
+            "eX5D8Vt+VQf53MZuZMzW4E4sSa3vzEIqyzCHo7zgxQT8pQElpkw/zuIZG6E3J9I7xJ/l9TIvnoEb8TxlWPtLjaiC6v7xU8bjRQzhHVhS" +
+            "qUP5Q+CkSJ/yFZHxF6ySqbn4Fyga2fXSW+6NGWBWKotfrnpRCSNnN2an/BGlb9dzSyRJoS0ObYJiQepFKWLUNdPfbZXiQQA=";
 
-    private static final String STEVE_VALUE = "eyJ0aW1lc3RhbXAiOjE1MTcwNTI0MzU2NjgsInByb2ZpbGVJZCI6IjBhYWEyYzEzOTIyYT" +
+    public static final String STEVE_VALUE = "eyJ0aW1lc3RhbXAiOjE1MTcwNTI0MzU2NjgsInByb2ZpbGVJZCI6IjBhYWEyYzEzOTIyYT" +
             "QxMWJiNjU1OWI4YzA4NDA0Njk1IiwicHJvZmlsZU5hbWUiOiJnYW1lczY0NyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dX" +
             "JlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTJlNmEzZjhjYWVhNzkxM2FiND" +
             "gyMzdiZWVhNmQ2YTFhNmY3NjkzNmUzYjcxYWY0YzdhMDhiYjYxYzc4NzAifX19";
-    private static final String STEVE_SIGNATURE = "JTfVSrd+glDHO2glPmsKdeTOXPgHw6mBnvFbZA75TBq7sQoIMoWjxOlvH7vPkPyTkM" +
+    public static final String STEVE_SIGNATURE = "JTfVSrd+glDHO2glPmsKdeTOXPgHw6mBnvFbZA75TBq7sQoIMoWjxOlvH7vPkPyTkM" +
             "sb5Vt4E6jsU73hi1FDYUaoGvzmTHzhN1scXluagx1jsye6jbAx64HK+0Iw5/8nwQUTVUP6ttxLC+2HZvIeNoYc6Dqd7HAIwcdxHFjDVb" +
             "MXAfMT33C0N1CTlvnEwbbK+Fx155Fg1nKU/PYoaSXWL9eEMwCLlpf/UTTegmDlpOwlo9zG2f8/YkhACE8gyJZOB+WJwf1+Vv3BUTuAnM" +
             "AKy7KztZDZE1119fBfVLblGykniAO63BATWTWqP/oTQFCSkmpPGMyznaAPJRt4/IfES4uxYAfXCxKWF4ZytdenAmbRo00ZVg77l6wdst" +

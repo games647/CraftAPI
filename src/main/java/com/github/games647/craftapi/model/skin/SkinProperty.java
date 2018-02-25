@@ -13,20 +13,16 @@ import java.util.Objects;
  */
 public class SkinProperty {
 
+    public static String TEXTURE_KEY = "textures";
+
     private static final String SIGNATURE_ALG = "SHA1withRSA";
 
-    private final String name = "textures";
-
-    private String value;
-    private String signature;
+    private final String value;
+    private final String signature;
 
     public SkinProperty(String value, String signature) {
         this.value = value;
         this.signature = signature;
-    }
-
-    protected SkinProperty() {
-        //gson
     }
 
     /**
@@ -89,8 +85,7 @@ public class SkinProperty {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + '{' +
-                "name='" + name + '\'' +
-                ", value='" + value + '\'' +
+                "value='" + value + '\'' +
                 ", signature='" + signature + '\'' +
                 '}';
     }

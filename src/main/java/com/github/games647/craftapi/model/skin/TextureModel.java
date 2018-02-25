@@ -10,13 +10,15 @@ public class TextureModel {
     private static final String URL_PREFIX = "http://textures.minecraft.net/texture/";
 
     private final String url;
-    private MetadataModel metadata;
+    private final MetadataModel metadata;
 
     public TextureModel(String shortUrl, boolean slimModel) {
         this.url = URL_PREFIX + shortUrl;
 
         if (slimModel) {
             metadata = new MetadataModel();
+        } else {
+            metadata = null;
         }
     }
 

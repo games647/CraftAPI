@@ -9,9 +9,15 @@ import java.util.UUID;
  */
 public class TexturesModel {
 
-    private UUID id;
-    private String name;
-    private SkinProperty[] properties;
+    private final UUID id;
+    private final String name;
+    private final SkinProperty[] properties;
+
+    public TexturesModel(UUID id, String name, SkinProperty[] properties) {
+        this.id = id;
+        this.name = name;
+        this.properties = properties;
+    }
 
     /**
      * @return player profile

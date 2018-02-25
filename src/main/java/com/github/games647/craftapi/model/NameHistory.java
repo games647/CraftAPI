@@ -9,8 +9,13 @@ import java.util.Optional;
  */
 public class NameHistory {
 
-    private String username;
-    private Instant changedToAt;
+    private final String username;
+    private final Instant changedToAt;
+
+    public NameHistory(String username, Instant changedToAt) {
+        this.username = username;
+        this.changedToAt = changedToAt;
+    }
 
     /**
      * @return name {@link #changedToAt} time

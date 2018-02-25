@@ -9,8 +9,13 @@ import java.util.Objects;
  */
 public class AuthResponse {
 
-    private String accessToken;
-    private Profile selectedProfile;
+    private final String accessToken;
+    private final Profile selectedProfile;
+
+    public AuthResponse(String accessToken, Profile selectedProfile) {
+        this.accessToken = accessToken;
+        this.selectedProfile = selectedProfile;
+    }
 
     /**
      * @return access token for authenticating without a password

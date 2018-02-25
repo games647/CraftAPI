@@ -1,6 +1,5 @@
 package com.github.games647.craftapi.resolver;
 
-import com.github.games647.craftapi.InstantAdapter;
 import com.github.games647.craftapi.RateLimitException;
 import com.github.games647.craftapi.UUIDAdapter;
 import com.github.games647.craftapi.model.NameHistory;
@@ -12,29 +11,20 @@ import com.github.games647.craftapi.model.auth.VerificationResponse;
 import com.github.games647.craftapi.model.skin.TexturesModel;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.awt.image.RenderedImage;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
-public class MojangResolver implements AuthResolver {
-
-    private static final int TIMEOUT = 3_000;
-    private static final String USER_AGENT = "CraftAPIClient";
+public class MojangResolver extends AbstractResolver implements AuthResolver {
 
     //UUID profile
     private static final String UUID_URL = "https://api.mojang.com/users/profiles/minecraft/";
@@ -48,11 +38,6 @@ public class MojangResolver implements AuthResolver {
     private static final String AUTH_URL = "https://authserver.mojang.com/authenticate";
     private static final String HAS_JOINED_URL = "https://sessionserver.mojang.com/session/minecraft/hasJoined?" +
             "username=%s&serverId=%s&ip=%s";
-
-    protected final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(UUID.class, new UUIDAdapter())
-            .registerTypeAdapter(Instant.class, new InstantAdapter())
-            .create();
 
     @Override
     public VerificationResponse hasJoinedServer(String username, String serverHash, InetAddress hostIp)
@@ -162,24 +147,5 @@ public class MojangResolver implements AuthResolver {
 
         TexturesModel texturesModel = readJson(conn.getInputStream(), TexturesModel.class);
         return Optional.of(texturesModel);
-    }
-
-    private <T> T readJson(InputStream inputStream, Class<T> classOfT) throws IOException {
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(inputStream, StandardCharsets.UTF_8))
-        ) {
-            return gson.fromJson(reader, classOfT);
-        }
-    }
-
-    private HttpURLConnection getConnection(String url) throws IOException {
-        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-
-        conn.setConnectTimeout(TIMEOUT);
-        conn.setReadTimeout(2 * TIMEOUT);
-
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("User-Agent", USER_AGENT);
-        return conn;
     }
 }
