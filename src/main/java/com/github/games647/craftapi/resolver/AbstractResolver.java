@@ -1,6 +1,7 @@
 package com.github.games647.craftapi.resolver;
 
 import com.github.games647.craftapi.InstantAdapter;
+import com.github.games647.craftapi.NamePredicate;
 import com.github.games647.craftapi.UUIDAdapter;
 import com.github.games647.craftapi.model.skin.SkinModel;
 import com.github.games647.craftapi.model.skin.SkinProperty;
@@ -19,11 +20,14 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 public abstract class AbstractResolver {
 
     private static final int TIMEOUT = 3_000;
     private static final String USER_AGENT = "CraftAPIClient";
+
+    protected final Predicate<String> validNamePredicate = new NamePredicate();
 
     protected final Gson gson = new GsonBuilder()
             .registerTypeAdapter(UUID.class, new UUIDAdapter())

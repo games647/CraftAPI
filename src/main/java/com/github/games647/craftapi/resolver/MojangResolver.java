@@ -8,7 +8,7 @@ import com.github.games647.craftapi.model.auth.Account;
 import com.github.games647.craftapi.model.auth.AuthRequest;
 import com.github.games647.craftapi.model.auth.AuthResponse;
 import com.github.games647.craftapi.model.auth.VerificationResponse;
-import com.github.games647.craftapi.model.skin.TexturesModel;
+import com.github.games647.craftapi.model.skin.Textures;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -111,6 +111,10 @@ public class MojangResolver extends AbstractResolver implements AuthResolver {
 
     @Override
     public Optional<Profile> findProfile(String name) throws IOException, RateLimitException {
+        if (!validNamePredicate.test(name)) {
+            return Optional.empty();
+        }
+
         HttpURLConnection conn = getConnection(UUID_URL + name);
 
         int responseCode = conn.getResponseCode();
@@ -128,11 +132,15 @@ public class MojangResolver extends AbstractResolver implements AuthResolver {
 
     @Override
     public Optional<Profile> findProfile(String name, Instant time) throws IOException, RateLimitException {
+        if (!validNamePredicate.test(name)) {
+            return Optional.empty();
+        }
+
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
-    public Optional<TexturesModel> downloadSkin(UUID uuid) throws IOException, RateLimitException {
+    public Optional<Textures> downloadSkin(UUID uuid) throws IOException, RateLimitException {
         String url = String.format(SKIN_URL, UUIDAdapter.toMojangId(uuid));
         HttpURLConnection conn = getConnection(url);
 
@@ -145,7 +153,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver {
             return Optional.empty();
         }
 
-        TexturesModel texturesModel = readJson(conn.getInputStream(), TexturesModel.class);
+        Textures texturesModel = readJson(conn.getInputStream(), Textures.class);
         return Optional.of(texturesModel);
     }
 }

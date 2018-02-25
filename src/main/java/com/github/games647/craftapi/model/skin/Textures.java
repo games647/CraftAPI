@@ -7,13 +7,13 @@ import java.util.UUID;
 /**
  * Skin, Cape, Elytra data
  */
-public class TexturesModel {
+public class Textures {
 
     private final UUID id;
     private final String name;
     private final SkinProperty[] properties;
 
-    public TexturesModel(UUID id, String name, SkinProperty[] properties) {
+    public Textures(UUID id, String name, SkinProperty[] properties) {
         this.id = id;
         this.name = name;
         this.properties = properties;
@@ -46,8 +46,8 @@ public class TexturesModel {
             return true;
         }
 
-        if (other instanceof TexturesModel) {
-            TexturesModel that = (TexturesModel) other;
+        if (other instanceof Textures) {
+            Textures that = (Textures) other;
             return Objects.equals(id, that.id) &&
                     Objects.equals(name, that.name) &&
                     Arrays.equals(properties, that.properties);

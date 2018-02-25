@@ -14,7 +14,7 @@ public class SkinModel {
     private final String profileName;
 
     private final boolean signatureRequired = true;
-    private final Map<TextureType, TextureModel> textures = new EnumMap<>(TextureType.class);
+    private final Map<TextureType, Texture> textures = new EnumMap<>(TextureType.class);
 
     public SkinModel(Instant timestamp, UUID uuid, String name, boolean slimModel, String skinURL, String capeURL) {
         this.timestamp = timestamp;
@@ -22,11 +22,11 @@ public class SkinModel {
         this.profileName = name;
 
         if (skinURL != null && !skinURL.isEmpty()) {
-            textures.put(TextureType.SKIN, new TextureModel(skinURL, slimModel));
+            textures.put(TextureType.SKIN, new Texture(skinURL, slimModel));
         }
 
         if (capeURL != null && !capeURL.isEmpty()) {
-            textures.put(TextureType.CAPE, new TextureModel(capeURL));
+            textures.put(TextureType.CAPE, new Texture(capeURL));
         }
     }
 
@@ -54,7 +54,7 @@ public class SkinModel {
     /**
      * @return skin, cape, elytra data
      */
-    public Map<TextureType, TextureModel> getTextures() {
+    public Map<TextureType, Texture> getTextures() {
         return textures;
     }
 

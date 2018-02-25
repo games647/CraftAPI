@@ -20,10 +20,10 @@ public class UUIDAdapterTest {
 
     @Test
     public void testOfflineUUID() throws Exception {
-        UUID boneId = UUIDAdapter.generateOfflineUUID("Dinnerbone");
+        UUID boneId = UUIDAdapter.generateOfflineId("Dinnerbone");
         assertThat(boneId, is(UUID.fromString(DINNERBONE_OFFLINE_ID)));
 
-        UUID jebId = UUIDAdapter.generateOfflineUUID("Jeb_");
+        UUID jebId = UUIDAdapter.generateOfflineId("Jeb_");
         assertThat(jebId, is(UUID.fromString(JEB_OFFLINE_ID)));
     }
 

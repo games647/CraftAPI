@@ -4,7 +4,7 @@ import com.github.games647.craftapi.UUIDAdapter;
 import com.github.games647.craftapi.model.skin.SkinModel;
 import com.github.games647.craftapi.model.skin.SkinProperty;
 import com.github.games647.craftapi.model.skin.SkinPropertyTest;
-import com.github.games647.craftapi.model.skin.TextureModel;
+import com.github.games647.craftapi.model.skin.Texture;
 import com.github.games647.craftapi.model.skin.TextureType;
 
 import java.time.Instant;
@@ -36,8 +36,8 @@ public class AbstractResolverTest {
         assertThat(skin.getProfileId(), is(UUIDAdapter.parseId("0aaa2c13922a411bb6559b8c08404695")));
         assertThat(skin.getProfileName(), is("games647"));
 
-        Map<TextureType, TextureModel> textures = skin.getTextures();
-        TextureModel skinTexture = textures.get(TextureType.SKIN);
+        Map<TextureType, Texture> textures = skin.getTextures();
+        Texture skinTexture = textures.get(TextureType.SKIN);
         assertThat(skinTexture.getShortUrl(), is("a2e6a3f8caea7913ab48237beea6d6a1a6f76936e3b71af4c7a08bb61c7870"));
         assertThat(skinTexture.getMetadata(), nullValue());
     }
@@ -51,8 +51,8 @@ public class AbstractResolverTest {
         assertThat(skin.getProfileId(), is(UUIDAdapter.parseId("78c3a4e837e448189df8f9ce61c5efcc")));
         assertThat(skin.getProfileName(), is("F0ggyMonst3r"));
 
-        Map<TextureType, TextureModel> textures = skin.getTextures();
-        TextureModel skinTexture = textures.get(TextureType.SKIN);
+        Map<TextureType, Texture> textures = skin.getTextures();
+        Texture skinTexture = textures.get(TextureType.SKIN);
         assertThat(skinTexture.getShortUrl(), is("52847ba3eb656e7ac69f2af9cec58d4ec2f5a2ea7e18968c97907e87efa9cc4"));
         assertThat(skinTexture.getMetadata().getModel(), is("slim"));
     }

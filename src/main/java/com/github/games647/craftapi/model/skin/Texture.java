@@ -5,31 +5,31 @@ import java.util.Objects;
 /**
  * Decoded data of one of the texture types.
  */
-public class TextureModel {
+public class Texture {
 
     private static final String URL_PREFIX = "http://textures.minecraft.net/texture/";
 
     private final String url;
-    private final MetadataModel metadata;
+    private final Metadata metadata;
 
-    public TextureModel(String shortUrl, boolean slimModel) {
+    public Texture(String shortUrl, boolean slimModel) {
         this.url = URL_PREFIX + shortUrl;
 
         if (slimModel) {
-            metadata = new MetadataModel();
+            metadata = new Metadata();
         } else {
             metadata = null;
         }
     }
 
-    public TextureModel(String shortUrl) {
+    public Texture(String shortUrl) {
         this(shortUrl, false);
     }
 
     /**
      * @return can be null if not slim or this is not a skin
      */
-    public MetadataModel getMetadata() {
+    public Metadata getMetadata() {
         return metadata;
     }
 
@@ -51,8 +51,8 @@ public class TextureModel {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof TextureModel)) return false;
-        TextureModel that = (TextureModel) o;
+        if (!(o instanceof Texture)) return false;
+        Texture that = (Texture) o;
         return Objects.equals(url, that.url) &&
                 Objects.equals(metadata, that.metadata);
     }

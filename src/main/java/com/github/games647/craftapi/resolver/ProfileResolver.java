@@ -3,7 +3,7 @@ package com.github.games647.craftapi.resolver;
 import com.github.games647.craftapi.RateLimitException;
 import com.github.games647.craftapi.model.NameHistory;
 import com.github.games647.craftapi.model.Profile;
-import com.github.games647.craftapi.model.skin.TexturesModel;
+import com.github.games647.craftapi.model.skin.Textures;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -60,5 +60,5 @@ public interface ProfileResolver {
      * @throws IOException
      * @throws RateLimitException
      */
-    Optional<TexturesModel> downloadSkin(UUID uuid) throws IOException, RateLimitException;
+    Optional<Textures> downloadSkin(UUID uuid) throws IOException, RateLimitException;
 }

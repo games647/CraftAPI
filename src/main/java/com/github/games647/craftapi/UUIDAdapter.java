@@ -49,7 +49,7 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
      * @param playerName case-sensitive player name
      * @return offline/cracked UUID
      */
-    public static UUID generateOfflineUUID(String playerName) {
+    public static UUID generateOfflineId(String playerName) {
         return UUID.nameUUIDFromBytes(("OfflinePlayer:" + playerName).getBytes(StandardCharsets.UTF_8));
     }
 }

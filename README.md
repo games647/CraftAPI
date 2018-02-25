@@ -4,7 +4,7 @@
 
 This is Minecraft library for contacting the Mojang API. It features modern features of Java and flexible way of
 communicating with Mojang. Rather than other Source-Code available, but not Open-Source, projects this one is open for
-contributions.  
+contributions. Furthermore this project is used for experimenting with Unit-Tests.
 
 ## Features
 
@@ -13,6 +13,7 @@ contributions.
 * Usage of modern Java 8 features
 * UUID and skin querying
 * Skin changing
+* Throws exceptions to let the user decide how to handle errors
 
 ## Planned
 
