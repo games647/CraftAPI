@@ -20,6 +20,7 @@ contributions. Furthermore this project is used for experimenting with Unit-Test
 ## Planned
 
 * Custom HTTP proxies
+* Configurable amount of uuid -> name requests
 * Service registration for Bukkit and Sponge
 * HTTP request interceptor to redirect to this library
 * Wait a customizable interval for sending bulk requests (although this increases latency)

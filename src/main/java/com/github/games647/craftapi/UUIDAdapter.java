@@ -1,7 +1,6 @@
 package com.github.games647.craftapi;
 
 import com.google.gson.TypeAdapter;
-import com.google.gson.internal.bind.TypeAdapters;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
@@ -19,11 +18,11 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
     private static final Pattern UUID_PATTERN = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
 
     public void write(JsonWriter out, UUID value) throws IOException {
-        TypeAdapters.STRING.write(out, toMojangId(value));
+        out.value(toMojangId(value));
     }
 
     public UUID read(JsonReader in) throws IOException {
-        return parseId(TypeAdapters.STRING.read(in));
+        return parseId(in.nextString());
     }
 
     /**

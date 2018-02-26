@@ -32,6 +32,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
 
     //skin
     private static final String CHANGE_SKIN_URL = "https://api.mojang.com/user/profile/%s/skin";
+    private static final String RESET_SKIN_URL = "https://api.mojang.com/user/profile/%s/skin";
     private static final String SKIN_URL = "https://sessionserver.mojang.com/session/minecraft/profile/%s" +
             "?unsigned=false";
 
@@ -97,7 +98,12 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
 
     @Override
     public void resetSkin(Account account) throws IOException {
-        throw new UnsupportedOperationException("Not implemented yet");
+        String url = String.format(RESET_SKIN_URL, account.getProfile().getId());
+
+        HttpURLConnection conn = getConnection(url);
+        conn.setRequestMethod("DELETE");
+
+        conn.getResponseCode();
     }
 
     @Override

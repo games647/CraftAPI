@@ -1,7 +1,6 @@
 package com.github.games647.craftapi;
 
 import com.google.gson.TypeAdapter;
-import com.google.gson.internal.bind.TypeAdapters;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
@@ -15,12 +14,11 @@ public class InstantAdapter extends TypeAdapter<Instant> {
 
     @Override
     public void write(JsonWriter out, Instant value) throws IOException {
-        TypeAdapters.LONG.write(out, value.toEpochMilli());
+        out.value(value.toEpochMilli());
     }
 
     @Override
     public Instant read(JsonReader in) throws IOException {
-        Number epochMilli = TypeAdapters.LONG.read(in);
-        return Instant.ofEpochMilli(epochMilli.longValue());
+        return Instant.ofEpochMilli(in.nextLong());
     }
 }
