@@ -33,8 +33,8 @@ public class AbstractResolverTest {
         SkinModel skin = resolver.decodeSkin(property);
 
         assertThat(skin.getTimestamp(), is(Instant.ofEpochMilli(1517052435668L)));
-        assertThat(skin.getProfileId(), is(UUIDAdapter.parseId("0aaa2c13922a411bb6559b8c08404695")));
-        assertThat(skin.getProfileName(), is("games647"));
+        assertThat(skin.getOwnerId(), is(UUIDAdapter.parseId("0aaa2c13922a411bb6559b8c08404695")));
+        assertThat(skin.getOwnerName(), is("games647"));
 
         Map<TextureType, Texture> textures = skin.getTextures();
         Texture skinTexture = textures.get(TextureType.SKIN);
@@ -48,8 +48,8 @@ public class AbstractResolverTest {
         SkinModel skin = resolver.decodeSkin(property);
 
         assertThat(skin.getTimestamp(), is(Instant.ofEpochMilli(1519552798232L)));
-        assertThat(skin.getProfileId(), is(UUIDAdapter.parseId("78c3a4e837e448189df8f9ce61c5efcc")));
-        assertThat(skin.getProfileName(), is("F0ggyMonst3r"));
+        assertThat(skin.getOwnerId(), is(UUIDAdapter.parseId("78c3a4e837e448189df8f9ce61c5efcc")));
+        assertThat(skin.getOwnerName(), is("F0ggyMonst3r"));
 
         Map<TextureType, Texture> textures = skin.getTextures();
         Texture skinTexture = textures.get(TextureType.SKIN);

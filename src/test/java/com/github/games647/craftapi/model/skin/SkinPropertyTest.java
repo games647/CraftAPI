@@ -57,24 +57,30 @@ public class SkinPropertyTest {
     }
 
     @Test
-    public void testVerification() throws Exception {
+    public void testVerify() throws Exception {
         SkinProperty property = new SkinProperty(STEVE_VALUE, STEVE_SIGNATURE);
         assertThat(property.isValid(publicKey), is(true));
     }
 
     @Test
-    public void testVerificationSlim() throws Exception {
+    public void testVerifySlim() throws Exception {
         SkinProperty property = new SkinProperty(SLIM_VALUE, SLIM_SIGNATURE);
         assertThat(property.isValid(publicKey), is(true));
     }
 
     @Test
-    public void testVerificationNegative() throws Exception {
+    public void testVerifyCustomPublic() throws Exception {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance(KEY_ALG);
         keyGen.initialize(KEY_SIZE);
         publicKey = keyGen.generateKeyPair().getPublic();
 
         SkinProperty property = new SkinProperty(STEVE_VALUE, STEVE_SIGNATURE);
+        assertThat(property.isValid(publicKey), is(false));
+    }
+
+    @Test
+    public void testVerifyInvalid() throws Exception {
+        SkinProperty property = new SkinProperty(STEVE_VALUE, SLIM_SIGNATURE);
         assertThat(property.isValid(publicKey), is(false));
     }
 

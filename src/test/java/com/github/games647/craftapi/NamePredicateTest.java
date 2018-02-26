@@ -37,6 +37,11 @@ public class NamePredicateTest {
         assertThat(predicate.test("F0ggyMonst3r"), is(true));
     }
 
+    @Test(expected = NullPointerException.class)
+    public void testNull() throws Exception {
+        assertThat(predicate.test(null), is(false));
+    }
+
     @Test
     public void testValidLength() throws Exception {
         assertThat(predicate.test("12"), is(true));

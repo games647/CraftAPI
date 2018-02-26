@@ -46,4 +46,15 @@ public class BalancedSSLFactoryTest {
             assertThat(localAddress.get(), is(localAddresses.get((i - 1) % localAddresses.size())));
         }
     }
+
+    @Test
+    public void testCollectionModifcation() throws Exception {
+        List<InetAddress> localAddresses = new ArrayList<>();
+        localAddresses.add(InetAddress.getByName("192.168.0.1"));
+
+        sslFactory.setOutgoingAddresses(localAddresses);
+        localAddresses.clear();
+
+        assertThat(sslFactory.getNextLocalAddress().isPresent(), is(true));
+    }
 }

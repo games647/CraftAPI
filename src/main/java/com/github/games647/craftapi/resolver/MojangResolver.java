@@ -8,6 +8,7 @@ import com.github.games647.craftapi.model.auth.Account;
 import com.github.games647.craftapi.model.auth.AuthRequest;
 import com.github.games647.craftapi.model.auth.AuthResponse;
 import com.github.games647.craftapi.model.auth.VerificationResponse;
+import com.github.games647.craftapi.model.skin.SkinProperty;
 import com.github.games647.craftapi.model.skin.Textures;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -24,7 +25,7 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
-public class MojangResolver extends AbstractResolver implements AuthResolver {
+public class MojangResolver extends AbstractResolver implements AuthResolver, ProfileResolver {
 
     //UUID profile
     private static final String UUID_URL = "https://api.mojang.com/users/profiles/minecraft/";
@@ -111,6 +112,11 @@ public class MojangResolver extends AbstractResolver implements AuthResolver {
 
     @Override
     public Optional<Profile> findProfile(String name) throws IOException, RateLimitException {
+        Optional<Profile> optProfile = cache.getByName(name);
+        if (optProfile.isPresent()) {
+            return optProfile;
+        }
+
         if (!validNamePredicate.test(name)) {
             return Optional.empty();
         }
@@ -127,11 +133,17 @@ public class MojangResolver extends AbstractResolver implements AuthResolver {
         }
 
         Profile profile = readJson(conn.getInputStream(), Profile.class);
+        cache.add(profile);
         return Optional.of(profile);
     }
 
     @Override
     public Optional<Profile> findProfile(String name, Instant time) throws IOException, RateLimitException {
+        Optional<Profile> optProfile = cache.getByName(name);
+        if (optProfile.isPresent()) {
+            return optProfile;
+        }
+
         if (!validNamePredicate.test(name)) {
             return Optional.empty();
         }
@@ -140,7 +152,12 @@ public class MojangResolver extends AbstractResolver implements AuthResolver {
     }
 
     @Override
-    public Optional<Textures> downloadSkin(UUID uuid) throws IOException, RateLimitException {
+    public Optional<SkinProperty> downloadSkin(UUID uuid) throws IOException, RateLimitException {
+        Optional<SkinProperty> optSkin = cache.getSkin(uuid);
+        if (optSkin.isPresent()) {
+            return optSkin;
+        }
+
         String url = String.format(SKIN_URL, UUIDAdapter.toMojangId(uuid));
         HttpURLConnection conn = getConnection(url);
 
@@ -154,6 +171,9 @@ public class MojangResolver extends AbstractResolver implements AuthResolver {
         }
 
         Textures texturesModel = readJson(conn.getInputStream(), Textures.class);
-        return Optional.of(texturesModel);
+        SkinProperty property = texturesModel.getProperties()[0];
+
+        cache.add(uuid, property);
+        return Optional.of(property);
     }
 }

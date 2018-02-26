@@ -28,12 +28,27 @@ public class UUIDAdapterTest {
     }
 
     @Test
-    public void testStripping() throws Exception {
+    public void testMojangId() throws Exception {
         UUID boneId = UUID.fromString(DINNERBONE_PREMIUM_ID);
         assertThat(UUIDAdapter.toMojangId(boneId), is(DINNERBONE_MOJANG_ID));
 
         UUID jebId = UUID.fromString(JEB_PREMIUM_ID);
         assertThat(UUIDAdapter.toMojangId(jebId), is(JEB_MOJANG_ID));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testNullMojangId() throws Exception {
+        UUIDAdapter.toMojangId(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testNullParse() throws Exception {
+        UUIDAdapter.parseId(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testNullGenerate() throws Exception {
+        UUIDAdapter.generateOfflineId(null);
     }
 
     @Test

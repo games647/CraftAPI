@@ -15,10 +15,10 @@ contributions. Furthermore this project is used for experimenting with Unit-Test
 * Skin changing
 * Multiple outgoing source IPs
 * Throws exceptions to let the user decide how to handle errors
+* Default implementation for in-memory cache
 
 ## Planned
 
-* Default implementation for in-memory cache
 * Custom HTTP proxies
 * Service registration for Bukkit and Sponge
 * HTTP request interceptor to redirect to this library

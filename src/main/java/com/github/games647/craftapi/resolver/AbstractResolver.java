@@ -3,6 +3,8 @@ package com.github.games647.craftapi.resolver;
 import com.github.games647.craftapi.InstantAdapter;
 import com.github.games647.craftapi.NamePredicate;
 import com.github.games647.craftapi.UUIDAdapter;
+import com.github.games647.craftapi.cache.Cache;
+import com.github.games647.craftapi.cache.MemoryCache;
 import com.github.games647.craftapi.model.skin.SkinModel;
 import com.github.games647.craftapi.model.skin.SkinProperty;
 import com.google.gson.Gson;
@@ -33,6 +35,8 @@ public abstract class AbstractResolver {
 
     protected final Predicate<String> validNamePredicate = new NamePredicate();
     protected final BalancedSSLFactory sslFactory = new BalancedSSLFactory();
+
+    protected Cache cache = new MemoryCache();
 
     protected final Gson gson = new GsonBuilder()
             .registerTypeAdapter(UUID.class, new UUIDAdapter())
@@ -80,6 +84,14 @@ public abstract class AbstractResolver {
 
         conn.setSSLSocketFactory(sslFactory);
         return conn;
+    }
+
+    public Cache getCache() {
+        return cache;
+    }
+
+    public void setCache(Cache cache) {
+        this.cache = cache;
     }
 
     public void setOutgoingAddresses(Collection<InetAddress> addresses) {

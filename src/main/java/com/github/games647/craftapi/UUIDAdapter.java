@@ -7,6 +7,7 @@ import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -36,11 +37,11 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
 
     /**
      * Converts the UUID to a String representation without dashes.
-     * @param uuid UUID that should be converted
+     * @param uniqueId UUID that should be converted
      * @return UUID without dashes
      */
-    public static String toMojangId(UUID uuid) {
-        return uuid.toString().replace("-", "");
+    public static String toMojangId(UUID uniqueId) {
+        return uniqueId.toString().replace("-", "");
     }
 
     /**
@@ -50,6 +51,7 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
      * @return offline/cracked UUID
      */
     public static UUID generateOfflineId(String playerName) {
+        Objects.requireNonNull(playerName);
         return UUID.nameUUIDFromBytes(("OfflinePlayer:" + playerName).getBytes(StandardCharsets.UTF_8));
     }
 }

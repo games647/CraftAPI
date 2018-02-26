@@ -40,14 +40,14 @@ public class SkinModel {
     /**
      * @return user profile of the skin owner
      */
-    public UUID getProfileId() {
+    public UUID getOwnerId() {
         return profileId;
     }
 
     /**
      * @return user name of the skin owner
      */
-    public String getProfileName() {
+    public String getOwnerName() {
         return profileName;
     }
 

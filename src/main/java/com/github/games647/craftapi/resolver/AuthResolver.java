@@ -10,7 +10,7 @@ import java.net.InetAddress;
 /**
  *
  */
-public interface AuthResolver extends ProfileResolver {
+public interface AuthResolver {
 
     /**
      *
