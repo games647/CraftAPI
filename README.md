@@ -9,6 +9,7 @@ contributions. Furthermore this project is used for experimenting with Unit-Test
 ## Features
 
 * Compatibility with Mineacraft 1.7.10+
+* Thread-Safe
 * Minimal requirements to integrate it into Sponge, BungeeCord and Spigot in a easy way
 * Usage of modern Java 8 features
 * UUID and skin querying
@@ -20,7 +21,7 @@ contributions. Furthermore this project is used for experimenting with Unit-Test
 ## Planned
 
 * Custom HTTP proxies
-* Configurable amount of uuid -> name requests
+* Configurable amount of name -> uuid requests
 * Service registration for Bukkit and Sponge
 * HTTP request interceptor to redirect to this library
 * Wait a customizable interval for sending bulk requests (although this increases latency)

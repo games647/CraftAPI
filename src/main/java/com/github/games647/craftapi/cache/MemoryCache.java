@@ -3,6 +3,7 @@ package com.github.games647.craftapi.cache;
 import com.github.games647.craftapi.model.Profile;
 import com.github.games647.craftapi.model.skin.SkinProperty;
 import com.google.common.cache.CacheLoader;
+import com.google.common.collect.ImmutableSet;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -63,6 +64,16 @@ public class MemoryCache implements Cache {
     @Override
     public Optional<SkinProperty> getSkin(UUID uniqueId) {
         return Optional.ofNullable(skinCache.get(uniqueId));
+    }
+
+    @Override
+    public ImmutableSet<Profile> getCachedProfiles() {
+        return ImmutableSet.copyOf(uuidToProfileCache.values());
+    }
+
+    @Override
+    public ImmutableSet<SkinProperty> getCachedSkins() {
+        return ImmutableSet.copyOf(skinCache.values());
     }
 
     private <K, V> ConcurrentMap<K, V> buildCache(int expireAfterWrite, int maxSize) {

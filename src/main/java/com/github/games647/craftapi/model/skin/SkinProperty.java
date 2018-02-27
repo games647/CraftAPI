@@ -50,9 +50,9 @@ public class SkinProperty {
         Signature sign = null;
         try {
             sign = Signature.getInstance(SIGNATURE_ALG);
-        } catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException noSuckAlgEx) {
             //SHA1withRSA should be present in all platforms
-            assert false : "The signature algorithm " + SIGNATURE_ALG + " doesn't exist in this environment";
+            throw new AssertionError("The signature algorithm " + SIGNATURE_ALG + " doesn't exist in this environment");
         }
 
         sign.initVerify(publicKey);

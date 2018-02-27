@@ -42,13 +42,17 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
             "username=%s&serverId=%s&ip=%s";
 
     @Override
-    public VerificationResponse hasJoinedServer(String username, String serverHash, InetAddress hostIp)
+    public Optional<VerificationResponse> hasJoinedServer(String username, String serverHash, InetAddress hostIp)
             throws IOException {
         String encodedIp = URLEncoder.encode(hostIp.getHostAddress(), StandardCharsets.UTF_8.name());
         String url = String.format(HAS_JOINED_URL, username, serverHash, encodedIp);
 
         HttpURLConnection conn = getConnection(url);
-        return readJson(conn.getInputStream(), VerificationResponse.class);
+        if (conn.getResponseCode() == HttpURLConnection.HTTP_NO_CONTENT) {
+            return Optional.empty();
+        }
+
+        return Optional.of(readJson(conn.getInputStream(), VerificationResponse.class));
     }
 
     @Override
@@ -102,7 +106,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
 
         HttpURLConnection conn = getConnection(url);
         conn.setRequestMethod("DELETE");
-
+        conn.addRequestProperty("Authorization", "Bearer " + account.getAccessToken());
         conn.getResponseCode();
     }
 
@@ -128,7 +132,6 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
         }
 
         HttpURLConnection conn = getConnection(UUID_URL + name);
-
         int responseCode = conn.getResponseCode();
         if (responseCode == RateLimitException.RATE_LIMIT_RESPONSE_CODE) {
             throw new RateLimitException();

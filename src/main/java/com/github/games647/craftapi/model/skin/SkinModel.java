@@ -54,8 +54,8 @@ public class SkinModel {
     /**
      * @return skin, cape, elytra data
      */
-    public Map<TextureType, Texture> getTextures() {
-        return textures;
+    public Texture getTexture(TextureType type) {
+        return textures.get(type);
     }
 
     @Override

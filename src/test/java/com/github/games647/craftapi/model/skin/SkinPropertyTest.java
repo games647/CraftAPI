@@ -1,8 +1,9 @@
 package com.github.games647.craftapi.model.skin;
 
-import java.io.ByteArrayOutputStream;
+import com.google.common.io.ByteStreams;
+
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
@@ -93,18 +94,9 @@ public class SkinPropertyTest {
 
     private static byte[] readAllBytes(URL url) throws IOException {
         try (
-                InputStream inputStream = url.openStream();
-                ByteArrayOutputStream buffer = new ByteArrayOutputStream()
+                BufferedInputStream in = new BufferedInputStream(url.openStream())
         ) {
-            int nRead;
-            byte[] data = new byte[Short.MAX_VALUE];
-
-            while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
-                buffer.write(data, 0, nRead);
-            }
-
-            buffer.flush();
-            return buffer.toByteArray();
+            return ByteStreams.toByteArray(in);
         }
     }
 }
