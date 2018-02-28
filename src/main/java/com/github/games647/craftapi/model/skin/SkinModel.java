@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 public class SkinModel {
@@ -54,8 +55,8 @@ public class SkinModel {
     /**
      * @return skin, cape, elytra data
      */
-    public Texture getTexture(TextureType type) {
-        return textures.get(type);
+    public Optional<Texture> getTexture(TextureType type) {
+        return Optional.ofNullable(textures.get(type));
     }
 
     @Override

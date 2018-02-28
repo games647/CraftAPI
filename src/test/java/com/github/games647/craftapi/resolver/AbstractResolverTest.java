@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 
 import static org.junit.Assert.assertThat;
 
@@ -35,9 +34,9 @@ public class AbstractResolverTest {
         assertThat(skin.getOwnerId(), is(UUIDAdapter.parseId("0aaa2c13922a411bb6559b8c08404695")));
         assertThat(skin.getOwnerName(), is("games647"));
 
-        Texture skinTexture = skin.getTexture(TextureType.SKIN);
+        Texture skinTexture = skin.getTexture(TextureType.SKIN).get();
         assertThat(skinTexture.getShortUrl(), is("a2e6a3f8caea7913ab48237beea6d6a1a6f76936e3b71af4c7a08bb61c7870"));
-        assertThat(skinTexture.getMetadata(), nullValue());
+        assertThat(skinTexture.getMetadata().isPresent(), is(false));
     }
 
     @Test
@@ -49,9 +48,9 @@ public class AbstractResolverTest {
         assertThat(skin.getOwnerId(), is(UUIDAdapter.parseId("78c3a4e837e448189df8f9ce61c5efcc")));
         assertThat(skin.getOwnerName(), is("F0ggyMonst3r"));
 
-        Texture skinTexture = skin.getTexture(TextureType.SKIN);
+        Texture skinTexture = skin.getTexture(TextureType.SKIN).get();
         assertThat(skinTexture.getShortUrl(), is("52847ba3eb656e7ac69f2af9cec58d4ec2f5a2ea7e18968c97907e87efa9cc4"));
-        assertThat(skinTexture.getMetadata().getModel(), is("slim"));
+        assertThat(skinTexture.getMetadata().get().getModel(), is("slim"));
     }
 
     @Test

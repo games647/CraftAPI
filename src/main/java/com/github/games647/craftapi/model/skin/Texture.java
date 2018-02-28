@@ -1,6 +1,7 @@
 package com.github.games647.craftapi.model.skin;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Decoded data of one of the texture types.
@@ -29,8 +30,8 @@ public class Texture {
     /**
      * @return can be null if not slim or this is not a skin
      */
-    public Metadata getMetadata() {
-        return metadata;
+    public Optional<Metadata> getMetadata() {
+        return Optional.ofNullable(metadata);
     }
 
     /**
