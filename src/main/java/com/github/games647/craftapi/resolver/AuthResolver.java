@@ -56,6 +56,6 @@ public interface AuthResolver {
      * @param account
      * @throws IOException
      */
-    void resetSkin(Account account) throws IOException;
+    boolean resetSkin(Account account) throws IOException;
 
 }

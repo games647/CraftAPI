@@ -101,13 +101,15 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     }
 
     @Override
-    public void resetSkin(Account account) throws IOException {
+    public boolean resetSkin(Account account) throws IOException {
         String url = String.format(RESET_SKIN_URL, account.getProfile().getId());
 
         HttpURLConnection conn = getConnection(url);
         conn.setRequestMethod("DELETE");
         conn.addRequestProperty("Authorization", "Bearer " + account.getAccessToken());
-        conn.getResponseCode();
+
+        int responseCode = conn.getResponseCode();
+        return responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_NO_CONTENT;
     }
 
     @Override
