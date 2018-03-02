@@ -1,6 +1,5 @@
 package com.github.games647.craftapi.resolver;
 
-import com.github.games647.craftapi.RateLimitException;
 import com.github.games647.craftapi.UUIDAdapter;
 import com.github.games647.craftapi.cache.CompatibleCacheBuilder;
 import com.github.games647.craftapi.model.NameHistory;
@@ -21,6 +20,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.Proxy;
+import java.net.Proxy.Type;
+import java.net.ProxySelector;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -31,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MojangResolver extends AbstractResolver implements AuthResolver, ProfileResolver {
 
-    //UUID profile
+    //profile
     private static final String UUID_URL = "https://api.mojang.com/users/profiles/minecraft/";
 
     //skin
@@ -44,6 +47,8 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     private static final String AUTH_URL = "https://authserver.mojang.com/authenticate";
     private static final String HAS_JOINED_URL = "https://sessionserver.mojang.com/session/minecraft/hasJoined?" +
             "username=%s&serverId=%s&ip=%s";
+
+    private ProxySelector proxySelector = ProxySelector.getDefault();
 
     private int maxNameRequests = 600;
     private final Map<Object, Object> requests = CompatibleCacheBuilder.newBuilder()
@@ -140,15 +145,20 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
             return optProfile;
         }
 
+        String url = UUID_URL + name;
+        HttpURLConnection conn;
+
         requests.put(new Object(), new Object());
         if (requests.size() >= maxNameRequests) {
-            throw new RateLimitException();
+            conn = getProxyConnection(url);
+        } else {
+            conn = getConnection(url);
         }
 
-        HttpURLConnection conn = getConnection(UUID_URL + name);
         int responseCode = conn.getResponseCode();
         if (responseCode == RateLimitException.RATE_LIMIT_RESPONSE_CODE) {
-            throw new RateLimitException();
+            conn = getProxyConnection(url);
+            responseCode = conn.getResponseCode();
         }
 
         if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
@@ -201,8 +211,31 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
         return Optional.of(property);
     }
 
+    private HttpURLConnection getProxyConnection(String url) throws RateLimitException, IOException {
+        Proxy proxy = proxySelector.select(URI.create(url)).get(0);
+        if (proxy.type() == Type.DIRECT || proxy == Proxy.NO_PROXY) {
+            throw new RateLimitException();
+        }
+
+        HttpURLConnection conn = getConnection(UUID_URL, proxy);
+        int responseCode = conn.getResponseCode();
+        if (responseCode == RateLimitException.RATE_LIMIT_RESPONSE_CODE) {
+            throw new RateLimitException();
+        }
+
+        return conn;
+    }
+
     public int getMaxNameRequests() {
         return maxNameRequests;
+    }
+
+    public ProxySelector getProxySelector() {
+        return proxySelector;
+    }
+
+    public void setProxySelector(ProxySelector proxySelector) {
+        this.proxySelector = proxySelector;
     }
 
     public void setMaxNameRequests(int maxNameRequests) {

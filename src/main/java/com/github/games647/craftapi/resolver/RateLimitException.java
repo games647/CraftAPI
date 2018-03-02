@@ -1,4 +1,4 @@
-package com.github.games647.craftapi;
+package com.github.games647.craftapi.resolver;
 
 /**
  * Exception that occurs if we made too many requests against an online resolver.

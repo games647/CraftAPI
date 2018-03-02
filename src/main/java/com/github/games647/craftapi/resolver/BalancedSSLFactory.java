@@ -8,10 +8,10 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
@@ -56,37 +56,38 @@ public class BalancedSSLFactory extends SSLSocketFactory {
     }
 
     @Override
-    public Socket createSocket(Socket socket, String s, int i, boolean b) throws IOException {
-        return oldFactory.createSocket(socket, s, i, b);
+    public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException {
+        return oldFactory.createSocket(socket, host, port, autoClose);
     }
 
     @Override
-    public Socket createSocket(Socket s, InputStream consumed, boolean autoClose) throws IOException {
-        return oldFactory.createSocket(s, consumed, autoClose);
+    public Socket createSocket(Socket socket, InputStream consumed, boolean autoClose) throws IOException {
+        return oldFactory.createSocket(socket, consumed, autoClose);
     }
 
     @Override
-    public Socket createSocket(String s, int i) throws IOException, UnknownHostException {
-        return oldFactory.createSocket(s, i);
+    public Socket createSocket(String socket, int port) throws IOException {
+        return oldFactory.createSocket(socket, port);
     }
 
     @Override
-    public Socket createSocket(String s, int i, InetAddress inetAddress, int i1) throws IOException, UnknownHostException {
-        return oldFactory.createSocket(s, i, inetAddress, i1);
+    public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException {
+        return oldFactory.createSocket(host, port, localHost, localPort);
     }
 
     @Override
-    public Socket createSocket(InetAddress inetAddress, int i) throws IOException {
-        return oldFactory.createSocket(inetAddress, i);
+    public Socket createSocket(InetAddress inetAddress, int port) throws IOException {
+        return oldFactory.createSocket(inetAddress, port);
     }
 
     @Override
-    public Socket createSocket(InetAddress inetAddress, int i, InetAddress inetAddress1, int i1) throws IOException {
-        return oldFactory.createSocket(inetAddress, i, inetAddress1, i1);
+    public Socket createSocket(InetAddress inetAddress, int port, InetAddress localHost, int localPort)
+            throws IOException {
+        return oldFactory.createSocket(inetAddress, port, localHost, localPort);
     }
 
     public void setOutgoingAddresses(Collection<InetAddress> addresses) {
-        ImmutableSet<InetAddress> copy = ImmutableSet.copyOf(addresses);
+        Set<InetAddress> copy = ImmutableSet.copyOf(addresses);
         Iterator<InetAddress> cycle = Iterators.cycle(copy);
 
         synchronized (this) {

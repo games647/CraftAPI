@@ -1,10 +1,8 @@
 package com.github.games647.craftapi.resolver;
 
-import com.github.games647.craftapi.RateLimitException;
 import com.github.games647.craftapi.model.NameHistory;
 import com.github.games647.craftapi.model.Profile;
 import com.github.games647.craftapi.model.skin.SkinProperty;
-import com.github.games647.craftapi.model.skin.Textures;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
