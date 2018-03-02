@@ -46,7 +46,10 @@ public abstract class AbstractResolver {
     public SkinModel decodeSkin(SkinProperty property) {
         byte[] data = Base64.getDecoder().decode(property.getValue());
         String json = new String(data, StandardCharsets.UTF_8);
-        return gson.fromJson(json, SkinModel.class);
+
+        SkinModel skinModel = gson.fromJson(json, SkinModel.class);
+        skinModel.setSignature(Base64.getDecoder().decode(property.getSignature()));
+        return skinModel;
     }
 
     public SkinProperty encodeSkin(SkinModel skinModel, byte[] signature) {

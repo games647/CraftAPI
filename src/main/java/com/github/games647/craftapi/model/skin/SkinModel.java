@@ -1,5 +1,7 @@
 package com.github.games647.craftapi.model.skin;
 
+import com.google.common.base.Strings;
+
 import java.time.Instant;
 import java.util.EnumMap;
 import java.util.Map;
@@ -17,16 +19,18 @@ public class SkinModel {
     private final boolean signatureRequired = true;
     private final Map<TextureType, Texture> textures = new EnumMap<>(TextureType.class);
 
+    private byte[] signature;
+
     public SkinModel(Instant timestamp, UUID uuid, String name, boolean slimModel, String skinURL, String capeURL) {
         this.timestamp = timestamp;
         this.profileId = uuid;
         this.profileName = name;
 
-        if (skinURL != null && !skinURL.isEmpty()) {
+        if (!Strings.isNullOrEmpty(skinURL)) {
             textures.put(TextureType.SKIN, new Texture(skinURL, slimModel));
         }
 
-        if (capeURL != null && !capeURL.isEmpty()) {
+        if (!Strings.isNullOrEmpty(capeURL)) {
             textures.put(TextureType.CAPE, new Texture(capeURL));
         }
     }
@@ -57,6 +61,20 @@ public class SkinModel {
      */
     public Optional<Texture> getTexture(TextureType type) {
         return Optional.ofNullable(textures.get(type));
+    }
+
+    /**
+     * @return the raw signature to verify that the skin is from Mojang
+     */
+    public byte[] getSignature() {
+        return signature;
+    }
+
+    /**
+     * @param signature raw signature bytes
+     */
+    public void setSignature(byte[] signature) {
+        this.signature = signature;
     }
 
     @Override
