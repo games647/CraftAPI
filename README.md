@@ -3,26 +3,25 @@
 ## Description
 
 This is Minecraft library for contacting the Mojang API. It features modern features of Java and flexible way of
-communicating with Mojang. Rather than other Source-Code available, but not Open-Source, projects this one is open for
-contributions. Furthermore this project is used for experimenting with Unit-Tests.
+communicating with Mojang. Furthermore this project is used for experimenting with Unit-Tests.
 
 ## Features
 
+* Minimal requirements to integrate it into Sponge, BungeeCord and Spigot in a easy way
 * Compatibility with Mineacraft 1.7.10+
 * Thread-Safe
-* Minimal requirements to integrate it into Sponge, BungeeCord and Spigot in a easy way
 * Usage of modern Java 8 features
 * UUID and skin querying
 * Skin changing
-* Multiple outgoing source IPs
+* Rotating multiple outgoing source IPs
 * Throws exceptions to let the user decide how to handle errors
-* Default implementation for in-memory cache
-* Custom HTTP proxies
-* Configurable amount of name -> uuid requests
+* Default in-memory cache
+* Rotating proxies
+* Configurable amount of name -> uuid requests before using proxies
 
 ## Planned
 
-* Unit testing for HTTP requests
+* Unit testing for HTTP requests like in [google-http-client](https://github.com/google/google-http-java-client)
 * Service registration for Bukkit and Sponge
 * HTTP request interceptor to redirect to this library
 * Wait a customizable interval for sending bulk requests (although this increases latency)
