@@ -3,10 +3,13 @@ package com.github.games647.craftapi;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+/**
+ * Validate if it's a valid Mojang player account name.
+ */
 public class NamePredicate implements Predicate<String> {
 
-    //this includes a-zA-Z1-9_
-    //compile the pattern only on plugin enable -> and this have to be thread-safe
+    // this includes a-zA-Z1-9_
+    // compile the pattern only on plugin enable -> and this have to be thread-safe
     private final Pattern validNameMatcher = Pattern.compile("^\\w{2,16}$");
 
     @Override

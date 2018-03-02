@@ -7,7 +7,7 @@ communicating with Mojang. Furthermore this project is used for experimenting wi
 
 ## Features
 
-* Minimal requirements to integrate it into Sponge, BungeeCord and Spigot in a easy way
+* Minimal requirements to integrate it into Sponge, BungeeCord and Spigot
 * Compatibility with Mineacraft 1.7.10+
 * Thread-Safe
 * Usage of modern Java 8 features

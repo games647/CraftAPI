@@ -10,6 +10,9 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * In memory cache for the skins and profiles.
+ */
 public class MemoryCache implements Cache {
 
     private static final int CACHE_SIZE = 16_384;

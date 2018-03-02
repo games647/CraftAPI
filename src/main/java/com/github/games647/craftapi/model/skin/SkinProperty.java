@@ -47,7 +47,7 @@ public class SkinProperty {
      * @throws SignatureException public key doesn't have the correct size
      */
     public boolean isValid(PublicKey publicKey) throws InvalidKeyException, SignatureException {
-        Signature sign = null;
+        Signature sign;
         try {
             sign = Signature.getInstance(SIGNATURE_ALG);
         } catch (NoSuchAlgorithmException noSuckAlgEx) {

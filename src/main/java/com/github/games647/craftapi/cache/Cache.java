@@ -7,6 +7,9 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Cache for the skins and profiles.
+ */
 public interface Cache {
 
     void add(Profile profile);

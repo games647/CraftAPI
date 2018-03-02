@@ -13,6 +13,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Proxy selector that rotates through the given collection.
+ */
 public class RotatingProxySelector extends ProxySelector {
 
     private final ProxySelector defaultSelector;
