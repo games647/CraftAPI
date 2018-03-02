@@ -2,6 +2,7 @@ package com.github.games647.craftapi.resolver;
 
 import com.github.games647.craftapi.RateLimitException;
 import com.github.games647.craftapi.UUIDAdapter;
+import com.github.games647.craftapi.cache.CompatibleCacheBuilder;
 import com.github.games647.craftapi.model.NameHistory;
 import com.github.games647.craftapi.model.Profile;
 import com.github.games647.craftapi.model.auth.Account;
@@ -10,6 +11,7 @@ import com.github.games647.craftapi.model.auth.AuthResponse;
 import com.github.games647.craftapi.model.auth.VerificationResponse;
 import com.github.games647.craftapi.model.skin.SkinProperty;
 import com.github.games647.craftapi.model.skin.Textures;
+import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -22,8 +24,10 @@ import java.net.InetAddress;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class MojangResolver extends AbstractResolver implements AuthResolver, ProfileResolver {
 
@@ -40,6 +44,13 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     private static final String AUTH_URL = "https://authserver.mojang.com/authenticate";
     private static final String HAS_JOINED_URL = "https://sessionserver.mojang.com/session/minecraft/hasJoined?" +
             "username=%s&serverId=%s&ip=%s";
+
+    private int maxNameRequests = 600;
+    private final Map<Object, Object> requests = CompatibleCacheBuilder.newBuilder()
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .build(CacheLoader.from(() -> {
+                throw new UnsupportedOperationException();
+            }));
 
     @Override
     public Optional<VerificationResponse> hasJoinedServer(String username, String serverHash, InetAddress hostIp)
@@ -125,12 +136,13 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     @Override
     public Optional<Profile> findProfile(String name) throws IOException, RateLimitException {
         Optional<Profile> optProfile = cache.getByName(name);
-        if (optProfile.isPresent()) {
+        if (optProfile.isPresent() || !validNamePredicate.test(name)) {
             return optProfile;
         }
 
-        if (!validNamePredicate.test(name)) {
-            return Optional.empty();
+        requests.put(new Object(), new Object());
+        if (requests.size() >= maxNameRequests) {
+            throw new RateLimitException();
         }
 
         HttpURLConnection conn = getConnection(UUID_URL + name);
@@ -151,12 +163,13 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     @Override
     public Optional<Profile> findProfile(String name, Instant time) throws IOException, RateLimitException {
         Optional<Profile> optProfile = cache.getByName(name);
-        if (optProfile.isPresent()) {
+        if (optProfile.isPresent() || !validNamePredicate.test(name)) {
             return optProfile;
         }
 
-        if (!validNamePredicate.test(name)) {
-            return Optional.empty();
+        requests.put(new Object(), new Object());
+        if (requests.size() >= maxNameRequests) {
+            throw new RateLimitException();
         }
 
         throw new UnsupportedOperationException("Not implemented yet");
@@ -186,5 +199,13 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
 
         cache.add(uuid, property);
         return Optional.of(property);
+    }
+
+    public int getMaxNameRequests() {
+        return maxNameRequests;
+    }
+
+    public void setMaxNameRequests(int maxNameRequests) {
+        this.maxNameRequests = Math.min(1, Math.max(600, maxNameRequests));
     }
 }

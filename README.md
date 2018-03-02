@@ -17,11 +17,12 @@ contributions. Furthermore this project is used for experimenting with Unit-Test
 * Multiple outgoing source IPs
 * Throws exceptions to let the user decide how to handle errors
 * Default implementation for in-memory cache
+* Configurable amount of name -> uuid requests
 
 ## Planned
 
 * Custom HTTP proxies
-* Configurable amount of name -> uuid requests
+* Unit testing for HTTP requests
 * Service registration for Bukkit and Sponge
 * HTTP request interceptor to redirect to this library
 * Wait a customizable interval for sending bulk requests (although this increases latency)
