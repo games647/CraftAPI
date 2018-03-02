@@ -3,6 +3,7 @@ package com.github.games647.craftapi.model.auth;
 import com.github.games647.craftapi.model.Profile;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Represents a logged in Mojang account.
@@ -10,9 +11,9 @@ import java.util.Objects;
 public class Account {
 
     private final Profile profile;
-    private final String accessToken;
+    private final UUID accessToken;
 
-    public Account(Profile profile, String accessToken) {
+    public Account(Profile profile, UUID accessToken) {
         this.profile = profile;
         this.accessToken = accessToken;
     }
@@ -27,7 +28,7 @@ public class Account {
     /**
      * @return access token for authentication against Mojang servers
      */
-    public String getAccessToken() {
+    public UUID getAccessToken() {
         return accessToken;
     }
 
