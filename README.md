@@ -23,6 +23,7 @@ communicating with Mojang. Furthermore this project is used for experimenting wi
 
 * Unit testing for HTTP requests like in [google-http-client](https://github.com/google/google-http-java-client)
 * Service registration for Bukkit and Sponge
+* Cache cracked username requests
 * HTTP request interceptor to redirect to this library
 * Wait a customizable interval for sending bulk requests (although this increases latency)
 * Add multiple remote APIs besides Mojang:

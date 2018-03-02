@@ -87,7 +87,6 @@ public class SkinModel {
                 "timestamp=" + timestamp +
                 ", profileId=" + profileId +
                 ", profileName='" + profileName + '\'' +
-                ", signatureRequired=" + signatureRequired +
                 ", textures=" + textures +
                 '}';
     }

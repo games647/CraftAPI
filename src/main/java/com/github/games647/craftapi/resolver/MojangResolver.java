@@ -7,7 +7,7 @@ import com.github.games647.craftapi.model.Profile;
 import com.github.games647.craftapi.model.auth.Account;
 import com.github.games647.craftapi.model.auth.AuthRequest;
 import com.github.games647.craftapi.model.auth.AuthResponse;
-import com.github.games647.craftapi.model.auth.VerificationResponse;
+import com.github.games647.craftapi.model.auth.Verification;
 import com.github.games647.craftapi.model.skin.SkinProperty;
 import com.github.games647.craftapi.model.skin.Textures;
 import com.google.common.cache.CacheLoader;
@@ -58,7 +58,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
             }));
 
     @Override
-    public Optional<VerificationResponse> hasJoinedServer(String username, String serverHash, InetAddress hostIp)
+    public Optional<Verification> hasJoined(String username, String serverHash, InetAddress hostIp)
             throws IOException {
         String encodedIp = URLEncoder.encode(hostIp.getHostAddress(), StandardCharsets.UTF_8.name());
         String url = String.format(HAS_JOINED_URL, username, serverHash, encodedIp);
@@ -68,7 +68,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
             return Optional.empty();
         }
 
-        return Optional.of(readJson(conn.getInputStream(), VerificationResponse.class));
+        return Optional.of(readJson(conn.getInputStream(), Verification.class));
     }
 
     @Override

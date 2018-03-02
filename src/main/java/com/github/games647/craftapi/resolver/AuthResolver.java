@@ -1,7 +1,7 @@
 package com.github.games647.craftapi.resolver;
 
 import com.github.games647.craftapi.model.auth.Account;
-import com.github.games647.craftapi.model.auth.VerificationResponse;
+import com.github.games647.craftapi.model.auth.Verification;
 
 import java.awt.image.RenderedImage;
 import java.io.IOException;
@@ -21,8 +21,7 @@ public interface AuthResolver {
      * @return
      * @throws IOException
      */
-    Optional<VerificationResponse> hasJoinedServer(String username, String serverHash, InetAddress hostIp)
-            throws IOException;
+    Optional<Verification> hasJoined(String username, String serverHash, InetAddress hostIp) throws IOException;
 
     /**
      *

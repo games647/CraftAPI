@@ -3,16 +3,17 @@ package com.github.games647.craftapi.model.auth;
 import com.github.games647.craftapi.model.Profile;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Result after an authentication request.
  */
 public class AuthResponse {
 
-    private final String accessToken;
+    private final UUID accessToken;
     private final Profile selectedProfile;
 
-    public AuthResponse(String accessToken, Profile selectedProfile) {
+    public AuthResponse(UUID accessToken, Profile selectedProfile) {
         this.accessToken = accessToken;
         this.selectedProfile = selectedProfile;
     }
@@ -20,7 +21,7 @@ public class AuthResponse {
     /**
      * @return access token for authenticating without a password
      */
-    public String getAccessToken() {
+    public UUID getAccessToken() {
         return accessToken;
     }
 

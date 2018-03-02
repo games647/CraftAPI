@@ -9,13 +9,13 @@ import java.util.UUID;
 /**
  * Premium server join verification response.
  */
-public class VerificationResponse {
+public class Verification {
 
     private final UUID id;
     private final String name;
     private final SkinProperty[] properties;
 
-    public VerificationResponse(UUID id, String name, SkinProperty[] properties) {
+    public Verification(UUID id, String name, SkinProperty[] properties) {
         this.id = id;
         this.name = name;
         this.properties = properties;
@@ -48,8 +48,8 @@ public class VerificationResponse {
             return true;
         }
 
-        if (other instanceof VerificationResponse) {
-            VerificationResponse that = (VerificationResponse) other;
+        if (other instanceof Verification) {
+            Verification that = (Verification) other;
             return Objects.equals(id, that.id) &&
                     Objects.equals(name, that.name) &&
                     Arrays.equals(properties, that.properties);

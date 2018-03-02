@@ -8,8 +8,8 @@ import java.util.UUID;
  */
 public class Profile {
 
-    private final UUID id;
-    private final String name;
+    protected UUID id;
+    protected String name;
 
     public Profile(UUID id, String name) {
         this.id = id;
