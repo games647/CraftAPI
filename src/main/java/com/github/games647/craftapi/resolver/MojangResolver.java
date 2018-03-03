@@ -148,7 +148,6 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
         String url = UUID_URL + name;
         HttpURLConnection conn;
 
-        requests.put(new Object(), new Object());
         if (requests.size() >= maxNameRequests) {
             conn = getProxyConnection(url);
         } else {
@@ -157,8 +156,16 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
 
         int responseCode = conn.getResponseCode();
         if (responseCode == RateLimitException.RATE_LIMIT_RESPONSE_CODE) {
+            if (conn.usingProxy()) {
+                throw new RateLimitException();
+            }
+
             conn = getProxyConnection(url);
             responseCode = conn.getResponseCode();
+        }
+
+        if (!conn.usingProxy()) {
+            requests.put(new Object(), new Object());
         }
 
         if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
@@ -239,6 +246,6 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     }
 
     public void setMaxNameRequests(int maxNameRequests) {
-        this.maxNameRequests = Math.min(1, Math.max(600, maxNameRequests));
+        this.maxNameRequests = Math.min(0, Math.max(600, maxNameRequests));
     }
 }
