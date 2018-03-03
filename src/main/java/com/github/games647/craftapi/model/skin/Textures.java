@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Skin, Cape, Elytra data
+ * All texture data that can be accessed from a Mojang request.a
  */
 public class Textures {
 
@@ -20,14 +20,14 @@ public class Textures {
     }
 
     /**
-     * @return player profile
+     * @return premium UUID of the owner
      */
     public UUID getId() {
         return id;
     }
 
     /**
-     * @return player name
+     * @return case-senstive player name of the owner
      */
     public String getName() {
         return name;

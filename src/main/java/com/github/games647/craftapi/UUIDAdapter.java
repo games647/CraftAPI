@@ -17,10 +17,12 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
 
     private static final Pattern UUID_PATTERN = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
 
+    @Override
     public void write(JsonWriter out, UUID value) throws IOException {
         out.value(toMojangId(value));
     }
 
+    @Override
     public UUID read(JsonReader in) throws IOException {
         return parseId(in.nextString());
     }

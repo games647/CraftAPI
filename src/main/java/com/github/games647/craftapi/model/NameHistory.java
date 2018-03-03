@@ -12,13 +12,28 @@ public class NameHistory {
     private final String username;
     private final Instant changedToAt;
 
+    /**
+     * History entry
+     *
+     * @param username name at the {@link #changedToAt} time
+     * @param changedToAt when the player changed it
+     */
     public NameHistory(String username, Instant changedToAt) {
         this.username = username;
         this.changedToAt = changedToAt;
     }
 
     /**
-     * @return name {@link #changedToAt} time
+     * Represents the latest/newest history entry
+     *
+     * @param username current active player name
+     */
+    public NameHistory(String username) {
+        this(username, null);
+    }
+
+    /**
+     * @return name at {@link #changedToAt} time
      */
     public String getUsername() {
         return username;

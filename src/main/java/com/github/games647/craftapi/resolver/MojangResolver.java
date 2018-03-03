@@ -1,7 +1,7 @@
 package com.github.games647.craftapi.resolver;
 
 import com.github.games647.craftapi.UUIDAdapter;
-import com.github.games647.craftapi.cache.CompatibleCacheBuilder;
+import com.github.games647.craftapi.cache.SafeCacheBuilder;
 import com.github.games647.craftapi.model.NameHistory;
 import com.github.games647.craftapi.model.Profile;
 import com.github.games647.craftapi.model.auth.Account;
@@ -32,6 +32,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Resolver that contacts Mojang.
+ */
 public class MojangResolver extends AbstractResolver implements AuthResolver, ProfileResolver {
 
     //profile
@@ -51,7 +54,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     private ProxySelector proxySelector = ProxySelector.getDefault();
 
     private int maxNameRequests = 600;
-    private final Map<Object, Object> requests = CompatibleCacheBuilder.newBuilder()
+    private final Map<Object, Object> requests = SafeCacheBuilder.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .build(CacheLoader.from(() -> {
                 throw new UnsupportedOperationException();
@@ -233,18 +236,32 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
         return conn;
     }
 
+    /**
+     * @return maximum amount of name to UUID requests that will be established to Mojang directly without proxies.
+     * (Between 0 and 600 within 10 minutes). Default is 600.
+     */
     public int getMaxNameRequests() {
         return maxNameRequests;
     }
 
+    /**
+     * @return the current proxy selector or {@link ProxySelector#getDefault()} if none
+     */
     public ProxySelector getProxySelector() {
         return proxySelector;
     }
 
+    /**
+     * @param proxySelector proxy selector that should be used
+     */
     public void setProxySelector(ProxySelector proxySelector) {
         this.proxySelector = proxySelector;
     }
 
+    /**
+     * @param maxNameRequests maximum amount of name to UUID requests that will be established to Mojang directly
+     *                        without proxies. (Between 0 and 600 within 10 minutes)
+     */
     public void setMaxNameRequests(int maxNameRequests) {
         this.maxNameRequests = Math.min(0, Math.max(600, maxNameRequests));
     }

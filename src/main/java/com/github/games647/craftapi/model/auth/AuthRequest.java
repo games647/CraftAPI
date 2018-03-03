@@ -12,6 +12,10 @@ public class AuthRequest {
     private final String username;
     private final String password;
 
+    /**
+     * @param username email address
+     * @param password plain text password
+     */
     public AuthRequest(String username, String password) {
         this.username = username;
         this.password = password;

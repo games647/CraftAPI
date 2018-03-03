@@ -70,4 +70,16 @@ public class Texture {
                 ", metadata=" + metadata +
                 '}';
     }
+
+    /**
+     * Texture types of skin properties
+     */
+    public static enum TextureType {
+
+        SKIN,
+
+        CAPE,
+
+        ELYTRA
+    }
 }

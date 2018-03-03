@@ -9,7 +9,7 @@ import java.util.Base64;
 import java.util.Objects;
 
 /**
- * Encoded skin property
+ * Base64 encoded skin property.
  */
 public class SkinProperty {
 
@@ -20,6 +20,12 @@ public class SkinProperty {
     private final String value;
     private final String signature;
 
+    /**
+     * Creates a new skin property that can be assigned to in game profiles.
+     *
+     * @param value base64 encoded json skin data
+     * @param signature base64 encoded signature
+     */
     public SkinProperty(String value, String signature) {
         this.value = value;
         this.signature = signature;

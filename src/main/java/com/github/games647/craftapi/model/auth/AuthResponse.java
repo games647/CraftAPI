@@ -13,6 +13,10 @@ public class AuthResponse {
     private final UUID accessToken;
     private final Profile selectedProfile;
 
+    /**
+     * @param accessToken access token for authentication
+     * @param selectedProfile selected game profile
+     */
     public AuthResponse(UUID accessToken, Profile selectedProfile) {
         this.accessToken = accessToken;
         this.selectedProfile = selectedProfile;

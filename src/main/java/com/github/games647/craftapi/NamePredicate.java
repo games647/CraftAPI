@@ -12,6 +12,10 @@ public class NamePredicate implements Predicate<String> {
     // compile the pattern only on plugin enable -> and this have to be thread-safe
     private final Pattern validNameMatcher = Pattern.compile("^\\w{2,16}$");
 
+    /**
+     * @param playerName player name that should be checked
+     * @return true if it's a valid Mojang account name
+     */
     @Override
     public boolean test(String playerName) {
         return validNameMatcher.matcher(playerName).matches();

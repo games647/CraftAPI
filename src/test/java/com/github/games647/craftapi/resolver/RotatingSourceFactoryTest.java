@@ -14,13 +14,13 @@ import static org.hamcrest.core.IsNull.notNullValue;
 
 import static org.junit.Assert.assertThat;
 
-public class BalancedSSLFactoryTest {
+public class RotatingSourceFactoryTest {
 
-    private BalancedSSLFactory sslFactory;
+    private RotatingSourceFactory sslFactory;
 
     @Before
     public void setUp() throws Exception {
-        sslFactory = new BalancedSSLFactory();
+        sslFactory = new RotatingSourceFactory();
     }
 
     @Test
@@ -48,7 +48,7 @@ public class BalancedSSLFactoryTest {
     }
 
     @Test
-    public void testCollectionModifcation() throws Exception {
+    public void testCollectionModification() throws Exception {
         List<InetAddress> localAddresses = new ArrayList<>();
         localAddresses.add(InetAddress.getByName("192.168.0.1"));
 

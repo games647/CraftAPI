@@ -1,4 +1,4 @@
-package com.github.games647.craftapi;
+package com.github.games647.craftapi.resolver;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -21,6 +21,12 @@ public class RotatingProxySelector extends ProxySelector {
     private final ProxySelector defaultSelector;
     private final Iterator<Proxy> proxies;
 
+    /**
+     * Creates a new proxy selector
+     *
+     * @param proxies all HTTP or SOCKS proxies
+     * @param oldSelector selector for connection failed callback
+     */
     public RotatingProxySelector(Iterable<Proxy> proxies, ProxySelector oldSelector) {
         Set<Proxy> copy = ImmutableSet.copyOf(proxies);
 
@@ -28,6 +34,11 @@ public class RotatingProxySelector extends ProxySelector {
         this.proxies = Iterables.cycle(copy).iterator();
     }
 
+    /**
+     * Creates a new proxy selector using {@link ProxySelector#getDefault()} for connection failed delegation
+     *
+     * @param proxies all HTTP or SOCKS proxies
+     */
     public RotatingProxySelector(Iterable<Proxy> proxies) {
         this(proxies, ProxySelector.getDefault());
     }

@@ -13,6 +13,12 @@ public class Account {
     private final Profile profile;
     private final UUID accessToken;
 
+    /**
+     * Creates a new Mojang account.
+     *
+     * @param profile the selected game profile
+     * @param accessToken access token for authentication instead of the password
+     */
     public Account(Profile profile, UUID accessToken) {
         this.profile = profile;
         this.accessToken = accessToken;

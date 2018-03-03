@@ -28,13 +28,16 @@ import java.util.function.Predicate;
 
 import javax.net.ssl.HttpsURLConnection;
 
+/**
+ * Base class for fetching Minecraft related data.
+ */
 public abstract class AbstractResolver {
 
     private static final int TIMEOUT = 3_000;
     private static final String USER_AGENT = "CraftAPIClient";
 
     protected final Predicate<String> validNamePredicate = new NamePredicate();
-    protected final BalancedSSLFactory sslFactory = new BalancedSSLFactory();
+    protected final RotatingSourceFactory sslFactory = new RotatingSourceFactory();
 
     protected Cache cache = new MemoryCache();
 
@@ -43,6 +46,12 @@ public abstract class AbstractResolver {
             .registerTypeAdapter(Instant.class, new InstantAdapter())
             .create();
 
+    /**
+     * Decodes the property from a skin request.
+     *
+     * @param property Base64 encoded skin property
+     * @return decoded model
+     */
     public SkinModel decodeSkin(SkinProperty property) {
         byte[] data = Base64.getDecoder().decode(property.getValue());
         String json = new String(data, StandardCharsets.UTF_8);
@@ -52,18 +61,42 @@ public abstract class AbstractResolver {
         return skinModel;
     }
 
-    public SkinProperty encodeSkin(SkinModel skinModel, byte[] signature) {
+    /**
+     * Decodes the skin for setting it in game.
+     *
+     * @param skinModel decoded skin model with signature
+     * @return Base64 encoded skin property
+     */
+    public SkinProperty encodeSkin(SkinModel skinModel) {
         String json = gson.toJson(skinModel);
 
         String encodedValue = Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
-        String encodedSignature = Base64.getEncoder().encodeToString(signature);
+        String encodedSignature = Base64.getEncoder().encodeToString(skinModel.getSignature());
         return new SkinProperty(encodedValue, encodedSignature);
     }
 
+    /**
+     * Buffers and parses all data in the input stream and closes it after it.
+     *
+     * @param inputStream unbuffered input stream
+     * @param classOfT the class that should be parsed to
+     * @param <T> type of the given class
+     * @return the parsed representation
+     * @throws IOException if an error occurs while reading the stream
+     */
     protected <T> T readJson(InputStream inputStream, Class<T> classOfT) throws IOException {
         return readJson(new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)), classOfT);
     }
 
+    /**
+     * Parses all data in the input stream and closes it after it.
+     *
+     * @param reader data reader
+     * @param classOfT the class that should be parsed to
+     * @param <T> type of the given class
+     * @return the parsed representation
+     * @throws IOException if an error occurs while reading the stream
+     */
     protected <T> T readJson(Reader reader, Class<T> classOfT) throws IOException {
         try {
             return gson.fromJson(reader, classOfT);
@@ -72,10 +105,25 @@ public abstract class AbstractResolver {
         }
     }
 
+    /**
+     * Create a new HTTPConnection with default timeout and HTTP-Headers for json accept and user-agent.
+     *
+     * @param url the complete url
+     * @return an unestablished HTTPConnection
+     * @throws IOException I/O exception on opening the data channel
+     */
     protected HttpURLConnection getConnection(String url) throws IOException {
         return getConnection(url, Proxy.NO_PROXY);
     }
 
+    /**
+     * Create a new HTTPConnection with default timeout and HTTP-Headers for json accept and user-agent.
+     *
+     * @param url
+     * @param proxy HTTP or SOCKS proxy through this connection
+     * @return an unestablished HTTPConnection
+     * @throws IOException I/O exception on opening the data channel
+     */
     protected HttpURLConnection getConnection(String url, Proxy proxy) throws IOException {
         HttpsURLConnection conn = (HttpsURLConnection) new URL(url).openConnection(proxy);
 
@@ -89,14 +137,27 @@ public abstract class AbstractResolver {
         return conn;
     }
 
+    /**
+     * @return the current cache backend.
+     */
     public Cache getCache() {
         return cache;
     }
 
+    /**
+     * Sets a new Mojang cache.
+     *
+     * @param cache cache implementation
+     */
     public void setCache(Cache cache) {
         this.cache = cache;
     }
 
+    /**
+     * Set the outgoing addresses. The rotating order will be the same as in the given collection.
+     *
+     * @param addresses all outgoing IPv4 addresses that are available or empty to disable it.
+     */
     public void setOutgoingAddresses(Collection<InetAddress> addresses) {
         sslFactory.setOutgoingAddresses(addresses);
     }

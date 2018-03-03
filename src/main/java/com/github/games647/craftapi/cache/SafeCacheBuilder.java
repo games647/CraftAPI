@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Kristian
  */
-public class CompatibleCacheBuilder<K, V> {
+public class SafeCacheBuilder<K, V> {
 
     private static Method BUILD_METHOD;
     private static Method AS_MAP_METHOD;
@@ -26,14 +26,14 @@ public class CompatibleCacheBuilder<K, V> {
      * @param <V> Value type
      * @return A new cache builder.
      */
-    public static <K, V> CompatibleCacheBuilder<K, V> newBuilder() {
-        return new CompatibleCacheBuilder<>();
+    public static <K, V> SafeCacheBuilder<K, V> newBuilder() {
+        return new SafeCacheBuilder<>();
     }
 
     private final CacheBuilder<K, V> builder;
 
     @SuppressWarnings("unchecked")
-    private CompatibleCacheBuilder() {
+    private SafeCacheBuilder() {
         builder = (CacheBuilder<K, V>) CacheBuilder.newBuilder();
     }
 
@@ -57,7 +57,7 @@ public class CompatibleCacheBuilder<K, V> {
      * @throws IllegalArgumentException if {@code concurrencyLevel} is non-positive
      * @throws IllegalStateException    if a concurrency level was already set
      */
-    public CompatibleCacheBuilder<K, V> concurrencyLevel(int concurrencyLevel) {
+    public SafeCacheBuilder<K, V> concurrencyLevel(int concurrencyLevel) {
         builder.concurrencyLevel(concurrencyLevel);
         return this;
     }
@@ -84,7 +84,7 @@ public class CompatibleCacheBuilder<K, V> {
      * @throws IllegalArgumentException if {@code duration} is negative
      * @throws IllegalStateException    if the time to idle or time to live was already set
      */
-    public CompatibleCacheBuilder<K, V> expireAfterAccess(long duration, TimeUnit unit) {
+    public SafeCacheBuilder<K, V> expireAfterAccess(long duration, TimeUnit unit) {
         builder.expireAfterAccess(duration, unit);
         return this;
     }
@@ -109,7 +109,7 @@ public class CompatibleCacheBuilder<K, V> {
      * @throws IllegalArgumentException if {@code duration} is negative
      * @throws IllegalStateException    if the time to live or time to idle was already set
      */
-    public CompatibleCacheBuilder<K, V> expireAfterWrite(long duration, TimeUnit unit) {
+    public SafeCacheBuilder<K, V> expireAfterWrite(long duration, TimeUnit unit) {
         builder.expireAfterWrite(duration, unit);
         return this;
     }
@@ -125,7 +125,7 @@ public class CompatibleCacheBuilder<K, V> {
      * @throws IllegalArgumentException if {@code initialCapacity} is negative
      * @throws IllegalStateException    if an initial capacity was already set
      */
-    public CompatibleCacheBuilder<K, V> initialCapacity(int initialCapacity) {
+    public SafeCacheBuilder<K, V> initialCapacity(int initialCapacity) {
         builder.initialCapacity(initialCapacity);
         return this;
     }
@@ -147,7 +147,7 @@ public class CompatibleCacheBuilder<K, V> {
      * @throws IllegalArgumentException if {@code size} is negative
      * @throws IllegalStateException    if a maximum size was already set
      */
-    public CompatibleCacheBuilder<K, V> maximumSize(int size) {
+    public SafeCacheBuilder<K, V> maximumSize(int size) {
         builder.maximumSize(size);
         return this;
     }
@@ -183,10 +183,10 @@ public class CompatibleCacheBuilder<K, V> {
      * @throws IllegalStateException if a removal listener was already set
      */
     @SuppressWarnings("unchecked")
-    public <K1 extends K, V1 extends V> CompatibleCacheBuilder<K1, V1> removalListener(
+    public <K1 extends K, V1 extends V> SafeCacheBuilder<K1, V1> removalListener(
             RemovalListener<? super K1, ? super V1> listener) {
         builder.removalListener(listener);
-        return (CompatibleCacheBuilder<K1, V1>) this;
+        return (SafeCacheBuilder<K1, V1>) this;
     }
 
     /**
@@ -201,7 +201,7 @@ public class CompatibleCacheBuilder<K, V> {
      * @return This for chaining
      * @throws IllegalStateException if a ticker was already set
      */
-    public CompatibleCacheBuilder<K, V> ticker(Ticker ticker) {
+    public SafeCacheBuilder<K, V> ticker(Ticker ticker) {
         builder.ticker(ticker);
         return this;
     }
@@ -224,7 +224,7 @@ public class CompatibleCacheBuilder<K, V> {
      * @return This for chaining
      * @throws IllegalStateException if the value strength was already set
      */
-    public CompatibleCacheBuilder<K, V> softValues() {
+    public SafeCacheBuilder<K, V> softValues() {
         builder.softValues();
         return this;
     }
@@ -240,7 +240,7 @@ public class CompatibleCacheBuilder<K, V> {
      * @return This for chaining
      * @throws IllegalStateException if the key strength was already set
      */
-    public CompatibleCacheBuilder<K, V> weakKeys() {
+    public SafeCacheBuilder<K, V> weakKeys() {
         builder.weakKeys();
         return this;
     }
@@ -260,7 +260,7 @@ public class CompatibleCacheBuilder<K, V> {
      * @return This for chaining
      * @throws IllegalStateException if the value strength was already set
      */
-    public CompatibleCacheBuilder<K, V> weakValues() {
+    public SafeCacheBuilder<K, V> weakValues() {
         builder.weakValues();
         return this;
     }

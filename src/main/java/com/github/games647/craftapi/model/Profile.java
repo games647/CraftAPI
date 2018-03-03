@@ -11,15 +11,27 @@ public class Profile {
     protected UUID id;
     protected String name;
 
+    /**
+     * Mojang premium game profile
+     *
+     * @param id premium UUID
+     * @param name case-sentive player name
+     */
     public Profile(UUID id, String name) {
         this.id = id;
         this.name = name;
     }
 
+    /**
+     * @return premium UUID
+     */
     public UUID getId() {
         return id;
     }
 
+    /**
+     * @return case-sensitive player name
+     */
     public String getName() {
         return name;
     }

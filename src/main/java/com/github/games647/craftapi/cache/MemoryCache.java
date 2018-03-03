@@ -80,7 +80,7 @@ public class MemoryCache implements Cache {
     }
 
     private <K, V> ConcurrentMap<K, V> buildCache(int expireAfterWrite, int maxSize) {
-        CompatibleCacheBuilder<Object, Object> builder = CompatibleCacheBuilder.newBuilder();
+        SafeCacheBuilder<Object, Object> builder = SafeCacheBuilder.newBuilder();
 
         if (expireAfterWrite > 0) {
             builder.expireAfterWrite(expireAfterWrite, TimeUnit.MINUTES);

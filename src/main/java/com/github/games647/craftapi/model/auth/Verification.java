@@ -15,6 +15,11 @@ public class Verification {
     private final String name;
     private final SkinProperty[] properties;
 
+    /**
+     * @param id premium UUID
+     * @param name case-sensitive player name
+     * @param properties profile properties like skin data
+     */
     public Verification(UUID id, String name, SkinProperty[] properties) {
         this.id = id;
         this.name = name;
