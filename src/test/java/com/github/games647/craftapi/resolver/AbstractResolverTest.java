@@ -88,7 +88,8 @@ public class AbstractResolverTest {
                 UUIDAdapter.parseId("0aaa2c13922a411bb6559b8c08404695"),
                 "games647", false,
                 "a2e6a3f8caea7913ab48237beea6d6a1a6f76936e3b71af4c7a08bb61c7870", "");
-        SkinProperty property = resolver.encodeSkin(skin, hexStringToByteArray(STEVE_SIGNATURE));
+        skin.setSignature(hexStringToByteArray(STEVE_SIGNATURE));
+        SkinProperty property = resolver.encodeSkin(skin);
 
         assertThat(property.getValue(), is(SkinPropertyTest.STEVE_VALUE));
         assertThat(property.getSignature(), is(SkinPropertyTest.STEVE_SIGNATURE));
@@ -100,7 +101,8 @@ public class AbstractResolverTest {
                 UUIDAdapter.parseId("78c3a4e837e448189df8f9ce61c5efcc"),
                 "F0ggyMonst3r", true,
                 "52847ba3eb656e7ac69f2af9cec58d4ec2f5a2ea7e18968c97907e87efa9cc4", "");
-        SkinProperty property = resolver.encodeSkin(skin, hexStringToByteArray(SLIM_SIGNATURE));
+        skin.setSignature(hexStringToByteArray(SLIM_SIGNATURE));
+        SkinProperty property = resolver.encodeSkin(skin);
 
         assertThat(property.getValue(), is(SkinPropertyTest.SLIM_VALUE));
         assertThat(property.getSignature(), is(SkinPropertyTest.SLIM_SIGNATURE));

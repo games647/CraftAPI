@@ -20,7 +20,7 @@ public class SkinModel {
     private final boolean signatureRequired = true;
     private final Map<Texture.TextureType, Texture> textures = new EnumMap<>(Texture.TextureType.class);
 
-    private byte[] signature;
+    private transient byte[] signature;
 
     /**
      * Creates a new decoded skin model
