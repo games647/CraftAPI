@@ -22,6 +22,25 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <links>
+                        <link>https://docs.oracle.com/javase/9/docs/api</link>
+                        <link>https://www.javadoc.io/doc/com.google.code.gson/gson/2.2.4/</link>
+                        <!--<link>https://www.javadoc.io/doc/com.google.guava/guava/10.0.1/</link>-->
+                    </links>
+
+                    <reportOutputDirectory>apidocs</reportOutputDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <!--Warning: This package is at a different position in Minecraft 1.7 -->
         <dependency>

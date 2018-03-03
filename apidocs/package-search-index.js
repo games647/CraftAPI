@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"com.github.games647.craftapi"},{"l":"com.github.games647.craftapi.cache"},{"l":"com.github.games647.craftapi.model"},{"l":"com.github.games647.craftapi.model.auth"},{"l":"com.github.games647.craftapi.model.skin"},{"l":"com.github.games647.craftapi.resolver"}]
