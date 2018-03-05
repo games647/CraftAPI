@@ -1,4 +1,4 @@
-package com.github.games647.craftapi.resolver;
+package com.github.games647.craftapi.resolver.http;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;

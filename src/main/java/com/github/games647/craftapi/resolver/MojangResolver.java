@@ -217,7 +217,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
         Textures texturesModel = readJson(conn.getInputStream(), Textures.class);
         SkinProperty property = texturesModel.getProperties()[0];
 
-        cache.add(uuid, property);
+        cache.addSkin(uuid, property);
         return Optional.of(property);
     }
 

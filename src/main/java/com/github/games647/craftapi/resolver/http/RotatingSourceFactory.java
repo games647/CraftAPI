@@ -1,4 +1,4 @@
-package com.github.games647.craftapi.resolver;
+package com.github.games647.craftapi.resolver.http;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterators;
@@ -100,7 +100,7 @@ public class RotatingSourceFactory extends SSLSocketFactory {
      *
      * @param addresses all outgoing IPv4 addresses that are available or empty to disable it.
      */
-    protected void setOutgoingAddresses(Collection<InetAddress> addresses) {
+    public void setOutgoingAddresses(Collection<InetAddress> addresses) {
         Set<InetAddress> copy = ImmutableSet.copyOf(addresses);
         Iterator<InetAddress> cycle = Iterators.cycle(copy);
 

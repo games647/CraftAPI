@@ -5,6 +5,7 @@ import com.github.games647.craftapi.model.skin.SkinProperty;
 import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableSet;
 
+import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
@@ -15,31 +16,55 @@ import java.util.concurrent.TimeUnit;
  */
 public class MemoryCache implements Cache {
 
-    private static final int CACHE_SIZE = 16_384;
-    private static final int CACHE_TIME = 60;
+    private static final int DEFAULT_UUID_EXPIRE = 16_384;
+    private static final int DEFAULT_UUID_SIZE = 60;
 
-    private static final int SKIN_CACHE_TIME = 5;
+    private static final int DEFAULT_SKIN_EXPIRE = 5;
+    private static final int DEFAULT_SKIN_SIZE = 0;
 
-    private final ConcurrentMap<UUID, Profile> uuidToProfileCache = buildCache(CACHE_TIME, CACHE_SIZE);
-    private final ConcurrentMap<String, Profile> nameToProfileCache = buildCache(CACHE_TIME, CACHE_SIZE);
+    private final ConcurrentMap<UUID, Profile> uuidToProfileCache;
+    private final ConcurrentMap<String, Profile> nameToProfileCache;
 
-    private final ConcurrentMap<UUID, SkinProperty> skinCache = buildCache(SKIN_CACHE_TIME, 0);
+    private final ConcurrentMap<UUID, SkinProperty> skinCache;
+
+    /**
+     * Creates a new memory cache with custom configuration options.
+     *
+     * @param uuidExpire uuid cache expiration time 0 to disable
+     * @param uuidSize uuid max cache size &le 0 to disable
+     * @param skinExpire skin cache expiration time 0 to disable
+     * @param skinSize skin max cache size &le 0 to disable
+     */
+    public MemoryCache(Duration uuidExpire, int uuidSize, Duration skinExpire, int skinSize) {
+        uuidToProfileCache = buildCache(uuidExpire.getSeconds(), uuidSize);
+        nameToProfileCache = buildCache(uuidExpire.getSeconds(), uuidSize);
+
+        skinCache = buildCache(skinExpire.getSeconds(), skinSize);
+    }
+
+    /**
+     * Creates a new skin cache with default parameters
+     */
+    public MemoryCache() {
+        this(Duration.ofMinutes(DEFAULT_UUID_EXPIRE), DEFAULT_UUID_SIZE,
+                Duration.ofMinutes(DEFAULT_SKIN_EXPIRE), DEFAULT_SKIN_SIZE);
+    }
 
     @Override
     public void add(Profile profile) {
         uuidToProfileCache.put(profile.getId(), profile);
-        nameToProfileCache.put(profile.getName(), profile);
+        nameToProfileCache.put(profile.getName().toLowerCase(), profile);
     }
 
     @Override
-    public void add(UUID uniqueId, SkinProperty property) {
+    public void addSkin(UUID uniqueId, SkinProperty property) {
         skinCache.put(uniqueId, property);
     }
 
     @Override
     public void remove(Profile profile) {
         uuidToProfileCache.remove(profile.getId(), profile);
-        nameToProfileCache.remove(profile.getName(), profile);
+        nameToProfileCache.remove(profile.getName().toLowerCase(), profile);
     }
 
     @Override
@@ -56,7 +81,7 @@ public class MemoryCache implements Cache {
 
     @Override
     public Optional<Profile> getByName(String playerName) {
-        return Optional.ofNullable(nameToProfileCache.get(playerName));
+        return Optional.ofNullable(nameToProfileCache.get(playerName.toLowerCase()));
     }
 
     @Override
@@ -79,11 +104,11 @@ public class MemoryCache implements Cache {
         return ImmutableSet.copyOf(skinCache.values());
     }
 
-    private <K, V> ConcurrentMap<K, V> buildCache(int expireAfterWrite, int maxSize) {
+    private <K, V> ConcurrentMap<K, V> buildCache(long expireAfterWrite, int maxSize) {
         SafeCacheBuilder<Object, Object> builder = SafeCacheBuilder.newBuilder();
 
         if (expireAfterWrite > 0) {
-            builder.expireAfterWrite(expireAfterWrite, TimeUnit.MINUTES);
+            builder.expireAfterWrite(expireAfterWrite, TimeUnit.SECONDS);
         }
 
         if (maxSize > 0) {

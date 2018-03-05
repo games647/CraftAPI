@@ -25,7 +25,7 @@ public interface Cache {
      * @param uniqueId UUID associated to this skin
      * @param property skin
      */
-    void add(UUID uniqueId, SkinProperty property);
+    void addSkin(UUID uniqueId, SkinProperty property);
 
     /**
      * Invalidate profile cache entry

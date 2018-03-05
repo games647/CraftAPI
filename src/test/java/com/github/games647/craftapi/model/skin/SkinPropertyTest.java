@@ -50,6 +50,20 @@ public class SkinPropertyTest {
             "RpqLRNK9/Wm8cf2sMbNCP6gPSlGao1nIuZsg7+eRih1G1LilJwtOaFhFeH+Pu+CUMCIZPxLtjTwZopG8P0FAwCTpO0gJJrqyMT+pozGA" +
             "fJ3mbt4uzuq5Mg1XYjazqEz5Zg8n0JwdTP0ZkoiVy4VMDeQz+C31bUmPcSDLxpJYF3uKQCGlbL1UZshcnQHXEEUhwb3bqjPKA=";
 
+    public static final String CAPE_VALUE = "eyJ0aW1lc3RhbXAiOjE1MjAyNzc1NzIzMjIsInByb2ZpbGVJZCI6IjYxNjk5YjJlZDMyNzRh" +
+            "MDE5ZjFlMGVhOGMzZjA2YmM2IiwicHJvZmlsZU5hbWUiOiJEaW5uZXJib25lIiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1" +
+            "cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9jZDZiZTkxNWIyNjE2NDNmZDEz" +
+            "NjIxZWU0ZTk5YzllNTQxYTU1MWQ4MDI3MjY4N2EzYjU2MTgzYjk4MWZiOWEifSwiQ0FQRSI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMu" +
+            "bWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2VlYzNjYWJmYWVlZDVkYWZlNjFjNjU0NjI5N2U4NTNhNTQ3YzM5ZWMyMzhkN2M0NGJmNGViNGE0" +
+            "OWRjMWYyYzAifX19";
+    public static final String CAPE_SIGNATURE = "qiURFe/44jgLijrsWAyKbhbQcCJ6Cv0yj1qWpuoY7dH+OA5RIoipxxg5rmAAUSD9SUxB" +
+            "ieVdsX1poc4U4OBfnkiwBKz/yIhpT9QQgN0mBOIX7seNf9/Acnvw75neGqn7LKpvHz8Kxn5zwsd8MGzXmpZR4n2Clwb+IjO7TX13v03E" +
+            "GxbjMJzRKTGMzLCeQDaXk1G13uYy6q6yrf8fPK2FAaeHbMnr1Csj11up+seTAy19A3fK27P05OT6nHlkUNhF5e/h4Qtjd/V98/JfAUTw" +
+            "mLca5gu2VRERXvDUm6rnP4paYawhH0YXQwVSCOujqjI2p4V/mnbTTILz4MFKRwwzwnmfcr6/LgC7kDpe6H3VvK3x/Y5chKl8aUNUC8b+" +
+            "cX0cDKE8dRSm0BirQjEmA6W76+AF6A7pSWufc7FnhyFROxpc/Z+qfBSwgT85BWqc7LmAgjoZLD+kZzF/hvsJlFrfaTZNZ5z7I26h0mke" +
+            "E2fwVoNmiHIDOPAgCkehv/HfEg5r45Q30MkxXFzsV9UEkFINo3GZOq8p3NTjhlj7OGjUQWpMiKu62+LWohGIm6NbKq2aYM/cPs0jSZ3s" +
+            "9lbofsHsEl301JyyI0OCbR4ltpgt6SpXOGInkVsbqbrRenL2gBun2fga0NNezgQHs0rZHXCnVGLuVm2kUJvSF9RgxwhXhKY=";
+
     private PublicKey publicKey;
 
     @Before
@@ -66,6 +80,12 @@ public class SkinPropertyTest {
     @Test
     public void testVerifySlim() throws Exception {
         SkinProperty property = new SkinProperty(SLIM_VALUE, SLIM_SIGNATURE);
+        assertThat(property.isValid(publicKey), is(true));
+    }
+
+    @Test
+    public void testVerifyCape() throws Exception {
+        SkinProperty property = new SkinProperty(CAPE_VALUE, CAPE_SIGNATURE);
         assertThat(property.isValid(publicKey), is(true));
     }
 

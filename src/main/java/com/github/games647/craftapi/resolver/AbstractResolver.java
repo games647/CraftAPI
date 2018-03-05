@@ -7,6 +7,7 @@ import com.github.games647.craftapi.cache.Cache;
 import com.github.games647.craftapi.cache.MemoryCache;
 import com.github.games647.craftapi.model.skin.SkinModel;
 import com.github.games647.craftapi.model.skin.SkinProperty;
+import com.github.games647.craftapi.resolver.http.RotatingSourceFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

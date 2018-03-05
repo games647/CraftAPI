@@ -1,4 +1,4 @@
-package com.github.games647.craftapi.resolver;
+package com.github.games647.craftapi.resolver.http;
 
 import java.net.InetAddress;
 import java.net.Socket;

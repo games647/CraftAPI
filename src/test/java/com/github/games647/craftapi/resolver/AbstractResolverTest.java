@@ -42,6 +42,17 @@ public class AbstractResolverTest {
             "E0943022193F12ED8D3C19A291BC3F4140C024E93B480926BAB2313FA9A331807C9DE66EDE2ECEEAB9320D576236" +
             "B3A84CF9660F27D09C1D4CFD19928895CB854C0DE433F82DF56D498F7120CBC69258177B8A4021A56CBD5466C85C" +
             "9D01D7104521C1BDDBAA33CA0";
+    private static final String CAPE_SIGNATURE = "AA251115EFF8E2380B8A3AEC580C8A6E16D070227A0AFD328F5A96A6EA18EDD1FE3" +
+            "80E512288A9C71839AE60005120FD494C4189E55DB17D69A1CE14E0E05F9E48B004ACFFC888694FD41080DD2604E217EEC78D7FD" +
+            "FC0727BF0EF99DE1AA9FB2CAA6F1F3F0AC67E73C2C77C306CD79A9651E27D829706FE2233BB4D7D77BF4DC41B16E3309CD129318" +
+            "CCCB09E4036979351B5DEE632EAAEB2ADFF1F3CAD8501A7876CC9EBD42B23D75BA9FAC793032D7D0377CADBB3F4E4E4FA9C79645" +
+            "0D845E5EFE1E10B6377F57DF3F25F0144F098B71AE60BB65511115EF0D49BAAE73F8A5A61AC211F461743055208EBA3AA3236A78" +
+            "57F9A76D34C82F3E0C14A470C33C2799F72BEBF2E00BB903A5EE87DD5BCADF1FD8E5C84A97C6943540BC6FE717D1C0CA13C7514A" +
+            "6D018AB42312603A5BBEBE005E80EE9496B9F73B1678721513B1A5CFD9FAA7C14B0813F39056A9CECB980823A192C3FA467317F8" +
+            "6FB09945ADF69364D679CFB236EA1D2691E1367F056836688720338F0200A47A1BFF1DF120E6BE39437D0C9315C5CEC57D504905" +
+            "20DA371993AAF29DCD4E38658FB3868D4416A4C88ABBADBE2D6A211889BA35B2AAD9A60CFDC3ECD23499DECF656E87EC1EC125DF" +
+            "4D49CB22343826D1E25B6982DE92A57386227915B1BA9BAD17A72F6801BA7D9F81AD0D35ECE0407B34AD91D70A75462EE566DA45" +
+            "09BD217D460C7085784A6";
     
     private AbstractResolver resolver;
 
@@ -83,6 +94,25 @@ public class AbstractResolverTest {
     }
 
     @Test
+    public void decodeSkinCape() throws Exception {
+        SkinProperty property = new SkinProperty(SkinPropertyTest.CAPE_VALUE, SkinPropertyTest.CAPE_SIGNATURE);
+        SkinModel skin = resolver.decodeSkin(property);
+
+        assertThat(skin.getSignature(), is(hexStringToByteArray(CAPE_SIGNATURE)));
+
+        assertThat(skin.getTimestamp(), is(Instant.ofEpochMilli(1520277572322L)));
+        assertThat(skin.getOwnerId(), is(UUIDAdapter.parseId("61699b2ed3274a019f1e0ea8c3f06bc6")));
+        assertThat(skin.getOwnerName(), is("Dinnerbone"));
+
+        Texture skinTexture = skin.getTexture(TextureType.SKIN).get();
+        assertThat(skinTexture.getShortUrl(), is("cd6be915b261643fd13621ee4e99c9e541a551d80272687a3b56183b981fb9a"));
+        assertThat(skinTexture.getMetadata().isPresent(), is(false));
+
+        Texture capeTexture = skin.getTexture(TextureType.CAPE).get();
+        assertThat(capeTexture.getShortUrl(), is("eec3cabfaeed5dafe61c6546297e853a547c39ec238d7c44bf4eb4a49dc1f2c0"));
+    }
+
+    @Test
     public void encodeSkinSteve() throws Exception {
         SkinModel skin = new SkinModel(Instant.ofEpochMilli(1517052435668L),
                 UUIDAdapter.parseId("0aaa2c13922a411bb6559b8c08404695"),
@@ -106,6 +136,20 @@ public class AbstractResolverTest {
 
         assertThat(property.getValue(), is(SkinPropertyTest.SLIM_VALUE));
         assertThat(property.getSignature(), is(SkinPropertyTest.SLIM_SIGNATURE));
+    }
+
+    @Test
+    public void encodeSkinCape() throws Exception {
+        SkinModel skin = new SkinModel(Instant.ofEpochMilli(1520277572322L),
+                UUIDAdapter.parseId("61699b2ed3274a019f1e0ea8c3f06bc6"),
+                "Dinnerbone", false,
+                "cd6be915b261643fd13621ee4e99c9e541a551d80272687a3b56183b981fb9a",
+                "eec3cabfaeed5dafe61c6546297e853a547c39ec238d7c44bf4eb4a49dc1f2c0");
+        skin.setSignature(hexStringToByteArray(CAPE_SIGNATURE));
+        SkinProperty property = resolver.encodeSkin(skin);
+
+        assertThat(property.getValue(), is(SkinPropertyTest.CAPE_VALUE));
+        assertThat(property.getSignature(), is(SkinPropertyTest.CAPE_SIGNATURE));
     }
 
     private static byte[] hexStringToByteArray(String hexString) {
