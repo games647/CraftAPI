@@ -18,6 +18,7 @@ public class SafeCacheBuilder<K, V> {
 
     private static Method BUILD_METHOD;
     private static Method AS_MAP_METHOD;
+    private static Method MAXIMUM_SIZE_METHOD;
 
     /**
      * Construct a new safe cache builder.
@@ -148,7 +149,22 @@ public class SafeCacheBuilder<K, V> {
      * @throws IllegalStateException    if a maximum size was already set
      */
     public SafeCacheBuilder<K, V> maximumSize(int size) {
-        builder.maximumSize(size);
+        try {
+            MAXIMUM_SIZE_METHOD = builder.getClass().getDeclaredMethod("maximumSize", Long.TYPE);
+        } catch (NoSuchMethodException noSuchMethodEx) {
+            try {
+                MAXIMUM_SIZE_METHOD = builder.getClass().getDeclaredMethod("maximumSize", Integer.TYPE);
+            } catch (NoSuchMethodException e) {
+                throw new IllegalStateException("Unable to find CacheBuilder.maximumSize(Int|Long)", e);
+            }
+        }
+
+        try {
+            MAXIMUM_SIZE_METHOD.invoke(builder, size);
+        } catch (Exception e) {
+            throw new IllegalStateException("Unable to invoke CacheBuilder.maximumSize(Int|Long)", e);
+        }
+
         return this;
     }
 
