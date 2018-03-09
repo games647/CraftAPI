@@ -10,6 +10,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,7 +25,17 @@ public class RotatingSourceFactory extends SSLSocketFactory {
 
     //in order to be thread-safe
     private final SSLSocketFactory oldFactory;
-    private Iterator<InetAddress> iterator = Iterators.emptyIterator();
+    private Iterator<InetAddress> iterator = new Iterator<InetAddress>() {
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
+
+        @Override
+        public InetAddress next() {
+            throw new NoSuchElementException("Empty iterator");
+        }
+    };
 
     /**
      * Creates a new factory using the given factory for delegation.
