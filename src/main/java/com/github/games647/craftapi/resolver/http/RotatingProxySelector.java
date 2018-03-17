@@ -47,10 +47,10 @@ public class RotatingProxySelector extends ProxySelector {
     public List<Proxy> select(URI uri) {
         synchronized (proxies) {
             if (proxies.hasNext()) {
-                return Collections.singletonList(Proxy.NO_PROXY);
+                return Collections.singletonList(proxies.next());
             }
 
-            return Collections.singletonList(proxies.next());
+            return Collections.singletonList(Proxy.NO_PROXY);
         }
     }
 
