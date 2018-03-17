@@ -1,7 +1,6 @@
 package com.github.games647.craftapi.resolver;
 
 import com.github.games647.craftapi.UUIDAdapter;
-import com.github.games647.craftapi.cache.SafeCacheBuilder;
 import com.github.games647.craftapi.model.NameHistory;
 import com.github.games647.craftapi.model.Profile;
 import com.github.games647.craftapi.model.auth.Account;
@@ -10,7 +9,6 @@ import com.github.games647.craftapi.model.auth.AuthResponse;
 import com.github.games647.craftapi.model.auth.Verification;
 import com.github.games647.craftapi.model.skin.SkinProperty;
 import com.github.games647.craftapi.model.skin.Textures;
-import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -27,10 +25,8 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Resolver that contacts Mojang.
@@ -54,11 +50,12 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     private ProxySelector proxySelector = ProxySelector.getDefault();
 
     private int maxNameRequests = 600;
-    private final Map<Object, Object> requests = SafeCacheBuilder.newBuilder()
-            .expireAfterWrite(10, TimeUnit.MINUTES)
-            .build(CacheLoader.from(() -> {
-                throw new UnsupportedOperationException();
-            }));
+    //todo: implement custom rate limiter that cleans up on size checking
+    // private final Map<Object, Object> requests = SafeCacheBuilder.newBuilder()
+    //         .expireAfterWrite(10, TimeUnit.MINUTES)
+    //         .build(CacheLoader.from(() -> {
+    //             throw new UnsupportedOperationException();
+    //         }));
 
     @Override
     public Optional<Verification> hasJoined(String username, String serverHash, InetAddress hostIp)
@@ -149,13 +146,13 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
         }
 
         String url = UUID_URL + name;
-        HttpURLConnection conn;
+        HttpURLConnection conn = getConnection(url);
 
-        if (requests.size() >= maxNameRequests) {
-            conn = getProxyConnection(url);
-        } else {
-            conn = getConnection(url);
-        }
+        // if (requests.size() > maxNameRequests) {
+        //     conn = getProxyConnection(url);
+        // } else {
+        //     conn = getConnection(url);
+        // }
 
         int responseCode = conn.getResponseCode();
         if (responseCode == RateLimitException.RATE_LIMIT_RESPONSE_CODE) {
@@ -167,9 +164,9 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
             responseCode = conn.getResponseCode();
         }
 
-        if (!conn.usingProxy()) {
-            requests.put(new Object(), new Object());
-        }
+        // if (!conn.usingProxy()) {
+        //     requests.put(new Object(), new Object());
+        // }
 
         if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
             return Optional.empty();
@@ -187,10 +184,10 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
             return optProfile;
         }
 
-        requests.put(new Object(), new Object());
-        if (requests.size() >= maxNameRequests) {
-            throw new RateLimitException();
-        }
+        // requests.put(new Object(), new Object());
+        // if (requests.size() >= maxNameRequests) {
+        //     throw new RateLimitException();
+        // }
 
         throw new UnsupportedOperationException("Not implemented yet");
     }
@@ -223,7 +220,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
 
     private HttpURLConnection getProxyConnection(String url) throws RateLimitException, IOException {
         Proxy proxy = proxySelector.select(URI.create(url)).get(0);
-        if (proxy.type() == Type.DIRECT || proxy == Proxy.NO_PROXY) {
+        if (proxy.type() == Type.DIRECT) {
             throw new RateLimitException();
         }
 
