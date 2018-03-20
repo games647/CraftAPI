@@ -7,6 +7,7 @@ import java.util.Objects;
  */
 public class Metadata {
 
+    //todo: change to enum
     private final String model = "slim";
 
     /**
