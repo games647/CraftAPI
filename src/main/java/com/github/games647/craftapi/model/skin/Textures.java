@@ -11,9 +11,9 @@ public class Textures {
 
     private final UUID id;
     private final String name;
-    private final SkinProperty[] properties;
+    private final Property[] properties;
 
-    public Textures(UUID id, String name, SkinProperty[] properties) {
+    public Textures(UUID id, String name, Property[] properties) {
         this.id = id;
         this.name = name;
         this.properties = properties;
@@ -36,7 +36,7 @@ public class Textures {
     /**
      * @return copy of the skin properties
      */
-    public SkinProperty[] getProperties() {
+    public Property[] getProperties() {
         return Arrays.copyOf(properties, properties.length);
     }
 

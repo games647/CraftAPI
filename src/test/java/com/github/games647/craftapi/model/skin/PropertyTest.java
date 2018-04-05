@@ -20,7 +20,7 @@ import static org.hamcrest.core.Is.is;
 
 import static org.junit.Assert.assertThat;
 
-public class SkinPropertyTest {
+public class PropertyTest {
 
     private static final String KEY_ALG = "RSA";
     private static final int KEY_SIZE = 4096;
@@ -73,19 +73,19 @@ public class SkinPropertyTest {
 
     @Test
     public void testVerify() throws Exception {
-        SkinProperty property = new SkinProperty(STEVE_VALUE, STEVE_SIGNATURE);
+        Property property = new Property(STEVE_VALUE, STEVE_SIGNATURE);
         assertThat(property.isValid(publicKey), is(true));
     }
 
     @Test
     public void testVerifySlim() throws Exception {
-        SkinProperty property = new SkinProperty(SLIM_VALUE, SLIM_SIGNATURE);
+        Property property = new Property(SLIM_VALUE, SLIM_SIGNATURE);
         assertThat(property.isValid(publicKey), is(true));
     }
 
     @Test
     public void testVerifyCape() throws Exception {
-        SkinProperty property = new SkinProperty(CAPE_VALUE, CAPE_SIGNATURE);
+        Property property = new Property(CAPE_VALUE, CAPE_SIGNATURE);
         assertThat(property.isValid(publicKey), is(true));
     }
 
@@ -95,18 +95,18 @@ public class SkinPropertyTest {
         keyGen.initialize(KEY_SIZE);
         publicKey = keyGen.generateKeyPair().getPublic();
 
-        SkinProperty property = new SkinProperty(STEVE_VALUE, STEVE_SIGNATURE);
+        Property property = new Property(STEVE_VALUE, STEVE_SIGNATURE);
         assertThat(property.isValid(publicKey), is(false));
     }
 
     @Test
     public void testVerifyInvalid() throws Exception {
-        SkinProperty property = new SkinProperty(STEVE_VALUE, SLIM_SIGNATURE);
+        Property property = new Property(STEVE_VALUE, SLIM_SIGNATURE);
         assertThat(property.isValid(publicKey), is(false));
     }
 
     private PublicKey loadPublicKey() throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
-        URL keyUrl = SkinPropertyTest.class.getResource(MOJANG_KEY_PATH);
+        URL keyUrl = PropertyTest.class.getResource(MOJANG_KEY_PATH);
         KeySpec spec = new X509EncodedKeySpec(readAllBytes(keyUrl));
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALG);
         return keyFactory.generatePublic(spec);

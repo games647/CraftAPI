@@ -5,8 +5,8 @@ import com.github.games647.craftapi.NamePredicate;
 import com.github.games647.craftapi.UUIDAdapter;
 import com.github.games647.craftapi.cache.Cache;
 import com.github.games647.craftapi.cache.MemoryCache;
-import com.github.games647.craftapi.model.skin.SkinModel;
-import com.github.games647.craftapi.model.skin.SkinProperty;
+import com.github.games647.craftapi.model.skin.Skin;
+import com.github.games647.craftapi.model.skin.Property;
 import com.github.games647.craftapi.resolver.http.RotatingSourceFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,11 +53,11 @@ public abstract class AbstractResolver {
      * @param property Base64 encoded skin property
      * @return decoded model
      */
-    public SkinModel decodeSkin(SkinProperty property) {
+    public Skin decodeSkin(Property property) {
         byte[] data = Base64.getDecoder().decode(property.getValue());
         String json = new String(data, StandardCharsets.UTF_8);
 
-        SkinModel skinModel = gson.fromJson(json, SkinModel.class);
+        Skin skinModel = gson.fromJson(json, Skin.class);
         skinModel.setSignature(Base64.getDecoder().decode(property.getSignature()));
         return skinModel;
     }
@@ -68,12 +68,12 @@ public abstract class AbstractResolver {
      * @param skinModel decoded skin model with signature
      * @return Base64 encoded skin property
      */
-    public SkinProperty encodeSkin(SkinModel skinModel) {
+    public Property encodeSkin(Skin skinModel) {
         String json = gson.toJson(skinModel);
 
         String encodedValue = Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
         String encodedSignature = Base64.getEncoder().encodeToString(skinModel.getSignature());
-        return new SkinProperty(encodedValue, encodedSignature);
+        return new Property(encodedValue, encodedSignature);
     }
 
     /**

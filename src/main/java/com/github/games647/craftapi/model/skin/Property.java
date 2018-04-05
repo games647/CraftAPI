@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * Base64 encoded skin property.
  */
-public class SkinProperty {
+public class Property {
 
     public static String TEXTURE_KEY = "textures";
 
@@ -26,13 +26,13 @@ public class SkinProperty {
      * @param value base64 encoded json skin data
      * @param signature base64 encoded signature
      */
-    public SkinProperty(String value, String signature) {
+    public Property(String value, String signature) {
         this.value = value;
         this.signature = signature;
     }
 
     /**
-     * @return base64 encoded data of the skin, cape and elytra data. See {@link SkinModel} for an example how the
+     * @return base64 encoded data of the skin, cape and elytra data. See {@link Skin} for an example how the
      *          skin would look like if it's decoded.
      */
     public String getValue() {
@@ -74,8 +74,8 @@ public class SkinProperty {
             return true;
         }
 
-        if (other instanceof SkinProperty) {
-            SkinProperty property = (SkinProperty) other;
+        if (other instanceof Property) {
+            Property property = (Property) other;
             return Objects.equals(value, property.value) &&
                     Objects.equals(signature, property.signature);
         }

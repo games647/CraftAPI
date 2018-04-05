@@ -1,7 +1,7 @@
 package com.github.games647.craftapi.cache;
 
 import com.github.games647.craftapi.model.Profile;
-import com.github.games647.craftapi.model.skin.SkinProperty;
+import com.github.games647.craftapi.model.skin.Property;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Optional;
@@ -25,7 +25,7 @@ public interface Cache {
      * @param uniqueId UUID associated to this skin
      * @param property skin
      */
-    void addSkin(UUID uniqueId, SkinProperty property);
+    void addSkin(UUID uniqueId, Property property);
 
     /**
      * Invalidate profile cache entry
@@ -68,7 +68,7 @@ public interface Cache {
      * @param uniqueId owner id
      * @return the skin or empty if not present in cache
      */
-    Optional<SkinProperty> getSkin(UUID uniqueId);
+    Optional<Property> getSkin(UUID uniqueId);
 
     /**
      * @return immutable list of all currently cached profiles
@@ -78,6 +78,6 @@ public interface Cache {
     /**
      * @return immutable list of all currently cached skins
      */
-    ImmutableSet<SkinProperty> getCachedSkins();
+    ImmutableSet<Property> getCachedSkins();
 
 }

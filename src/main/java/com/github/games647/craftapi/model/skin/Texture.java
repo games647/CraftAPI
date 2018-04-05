@@ -1,5 +1,7 @@
 package com.github.games647.craftapi.model.skin;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -10,43 +12,68 @@ public class Texture {
 
     private static final String URL_PREFIX = "http://textures.minecraft.net/texture/";
 
+    protected transient TextureType type;
+
     private final String url;
-    private final Metadata metadata;
+    private final Map<String, Model> metadata;
 
-    public Texture(String shortUrl, boolean slimModel) {
-        this.url = URL_PREFIX + shortUrl;
+    protected Texture(TextureType type, String hash, Model skinModel) {
+        this.url = URL_PREFIX + hash;
+        this.type = type;
 
-        if (slimModel) {
-            metadata = new Metadata();
+        if (skinModel == Model.SLIM) {
+            metadata = Collections.singletonMap("model", Model.SLIM);
         } else {
+            //this have to be null, because for square models this field shouldn't exist
             metadata = null;
         }
     }
 
-    public Texture(String shortUrl) {
-        this(shortUrl, false);
+    public Texture(String hash, Model skinModel) {
+        //only skins can have models
+        this(TextureType.SKIN, hash, skinModel);
+    }
+
+    public Texture(TextureType type, String hash) {
+        this(type, hash, null);
     }
 
     /**
-     * @return can be null if not slim or this is not a skin
+     * @return {@link Optional#empty()} if not a skin otherwise returns the arm model
      */
-    public Optional<Metadata> getMetadata() {
-        return Optional.ofNullable(metadata);
+    public Optional<Model> getArmModel() {
+        //only skins have this data
+        if (type != TextureType.SKIN) {
+            return Optional.empty();
+        }
+
+        if (metadata != null) {
+            //check if there more metadata besides the model
+            return Optional.ofNullable(metadata.getOrDefault("model", Model.SQUARE));
+        }
+
+        //metadata will be discarded for square models and no other metadata
+        return Optional.of(Model.SQUARE);
     }
 
     /**
      * @return complete url where the client can find the skin
      */
-    public String getUrl() {
+    public String getURL() {
         return url;
     }
 
     /**
      * @return url without the Mojang prefix.
-     *          Example: http://textures.minecraft.net/texture/SKIN_DATA to SKIN_DATA
+     *          Example: http://textures.minecraft.net/texture/HASH to HASH
      */
-    public String getShortUrl() {
-        return url.replace(URL_PREFIX, "");
+    public String getHash() {
+        int lastSeparator = url.lastIndexOf('/');
+        if (lastSeparator < 0) {
+            return url;
+        }
+
+        return url.substring(lastSeparator + 1);
     }
 
     @Override
@@ -74,7 +101,7 @@ public class Texture {
     /**
      * Texture types of skin properties
      */
-    public static enum TextureType {
+    public enum TextureType {
 
         SKIN,
 

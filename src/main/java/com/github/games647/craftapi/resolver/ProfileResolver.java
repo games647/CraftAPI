@@ -2,7 +2,7 @@ package com.github.games647.craftapi.resolver;
 
 import com.github.games647.craftapi.model.NameHistory;
 import com.github.games647.craftapi.model.Profile;
-import com.github.games647.craftapi.model.skin.SkinProperty;
+import com.github.games647.craftapi.model.skin.Property;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -68,5 +68,5 @@ public interface ProfileResolver {
      * @throws IOException I/O error on fetching the skin
      * @throws RateLimitException more than 1 request within one minute for the same uuid
      */
-    Optional<SkinProperty> downloadSkin(UUID uuid) throws IOException, RateLimitException;
+    Optional<Property> downloadSkin(UUID uuid) throws IOException, RateLimitException;
 }

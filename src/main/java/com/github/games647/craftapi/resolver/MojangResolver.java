@@ -7,7 +7,7 @@ import com.github.games647.craftapi.model.auth.Account;
 import com.github.games647.craftapi.model.auth.AuthRequest;
 import com.github.games647.craftapi.model.auth.AuthResponse;
 import com.github.games647.craftapi.model.auth.Verification;
-import com.github.games647.craftapi.model.skin.SkinProperty;
+import com.github.games647.craftapi.model.skin.Property;
 import com.github.games647.craftapi.model.skin.Textures;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -193,8 +193,8 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     }
 
     @Override
-    public Optional<SkinProperty> downloadSkin(UUID uuid) throws IOException, RateLimitException {
-        Optional<SkinProperty> optSkin = cache.getSkin(uuid);
+    public Optional<Property> downloadSkin(UUID uuid) throws IOException, RateLimitException {
+        Optional<Property> optSkin = cache.getSkin(uuid);
         if (optSkin.isPresent()) {
             return optSkin;
         }
@@ -212,7 +212,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
         }
 
         Textures texturesModel = readJson(conn.getInputStream(), Textures.class);
-        SkinProperty property = texturesModel.getProperties()[0];
+        Property property = texturesModel.getProperties()[0];
 
         cache.addSkin(uuid, property);
         return Optional.of(property);

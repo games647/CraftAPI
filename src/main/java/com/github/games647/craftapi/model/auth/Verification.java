@@ -1,6 +1,6 @@
 package com.github.games647.craftapi.model.auth;
 
-import com.github.games647.craftapi.model.skin.SkinProperty;
+import com.github.games647.craftapi.model.skin.Property;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -13,14 +13,14 @@ public class Verification {
 
     private final UUID id;
     private final String name;
-    private final SkinProperty[] properties;
+    private final Property[] properties;
 
     /**
      * @param id premium UUID
      * @param name case-sensitive player name
      * @param properties profile properties like skin data
      */
-    public Verification(UUID id, String name, SkinProperty[] properties) {
+    public Verification(UUID id, String name, Property[] properties) {
         this.id = id;
         this.name = name;
         this.properties = properties;
@@ -43,7 +43,7 @@ public class Verification {
     /**
      * @return additional properties like Skin data
      */
-    public SkinProperty[] getProperties() {
+    public Property[] getProperties() {
         return Arrays.copyOf(properties, properties.length);
     }
 

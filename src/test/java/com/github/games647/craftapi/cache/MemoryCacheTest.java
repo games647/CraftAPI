@@ -1,8 +1,8 @@
 package com.github.games647.craftapi.cache;
 
 import com.github.games647.craftapi.model.Profile;
-import com.github.games647.craftapi.model.skin.SkinProperty;
-import com.github.games647.craftapi.model.skin.SkinPropertyTest;
+import com.github.games647.craftapi.model.skin.Property;
+import com.github.games647.craftapi.model.skin.PropertyTest;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -37,8 +37,8 @@ public class MemoryCacheTest {
     public void maxSizeSkin() throws Exception {
         assertThat(cache.getCachedSkins().size(), is(0));
 
-        SkinProperty property1 = new SkinProperty(SkinPropertyTest.STEVE_VALUE, SkinPropertyTest.STEVE_SIGNATURE);
-        SkinProperty property2 = new SkinProperty(SkinPropertyTest.SLIM_VALUE, SkinPropertyTest.SLIM_SIGNATURE);
+        Property property1 = new Property(PropertyTest.STEVE_VALUE, PropertyTest.STEVE_SIGNATURE);
+        Property property2 = new Property(PropertyTest.SLIM_VALUE, PropertyTest.SLIM_SIGNATURE);
         cache.addSkin(UUID.randomUUID(), property1);
         cache.addSkin(UUID.randomUUID(), property2);
 
@@ -51,7 +51,7 @@ public class MemoryCacheTest {
 
         assertThat(cache.getSkin(profileId).isPresent(), is(false));
 
-        SkinProperty property = new SkinProperty(SkinPropertyTest.STEVE_VALUE, SkinPropertyTest.STEVE_SIGNATURE);
+        Property property = new Property(PropertyTest.STEVE_VALUE, PropertyTest.STEVE_SIGNATURE);
         cache.addSkin(profileId, property);
 
         assertThat(cache.getSkin(profileId).get(), is(property));
@@ -83,7 +83,7 @@ public class MemoryCacheTest {
         Profile profile = new Profile(UUID.randomUUID(), "123ABC_abc");
         cache.add(profile);
 
-        SkinProperty property = new SkinProperty(SkinPropertyTest.STEVE_VALUE, SkinPropertyTest.STEVE_SIGNATURE);
+        Property property = new Property(PropertyTest.STEVE_VALUE, PropertyTest.STEVE_SIGNATURE);
         cache.addSkin(profile.getId(), property);
 
         cache.clear();
@@ -109,7 +109,7 @@ public class MemoryCacheTest {
     @Test
     public void removeSkin() throws Exception {
         UUID profileId = UUID.randomUUID();
-        SkinProperty property = new SkinProperty(SkinPropertyTest.STEVE_VALUE, SkinPropertyTest.STEVE_SIGNATURE);
+        Property property = new Property(PropertyTest.STEVE_VALUE, PropertyTest.STEVE_SIGNATURE);
         cache.addSkin(profileId, property);
 
         cache.removeSkin(UUID.randomUUID());

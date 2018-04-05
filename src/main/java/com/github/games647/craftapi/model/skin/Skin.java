@@ -10,39 +10,38 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SkinModel {
+public class Skin {
 
-    //the order of these fields are relevant
+    //the order and existence of these fields are relevant for GSON
     private final Instant timestamp;
     private final UUID profileId;
     private final String profileName;
 
     private final boolean signatureRequired = true;
-    private final Map<Texture.TextureType, Texture> textures = new EnumMap<>(Texture.TextureType.class);
+    private final Map<TextureType, Texture> textures = new EnumMap<>(TextureType.class);
 
     private transient byte[] signature;
 
     /**
      * Creates a new decoded skin model
-     *
      * @param timestamp when was the skin fetched from Mojang
      * @param uuid premium UUID of the Owner
      * @param name case-sensitive name of the owner
-     * @param slimModel true if slim model otherwise false for steve
-     * @param skinURL short skin url or empty
-     * @param capeURL short cape url or empty
+     * @param skinHash short skin url or empty
+     * @param skinModel true if slim model otherwise false for steve
+     * @param capeHash short cape url or empty
      */
-    public SkinModel(Instant timestamp, UUID uuid, String name, boolean slimModel, String skinURL, String capeURL) {
+    public Skin(Instant timestamp, UUID uuid, String name, String skinHash, Model skinModel, String capeHash) {
         this.timestamp = timestamp;
         this.profileId = uuid;
         this.profileName = name;
 
-        if (!Strings.isNullOrEmpty(skinURL)) {
-            textures.put(TextureType.SKIN, new Texture(skinURL, slimModel));
+        if (!Strings.isNullOrEmpty(skinHash)) {
+            textures.put(TextureType.SKIN, new Texture(skinHash, skinModel));
         }
 
-        if (!Strings.isNullOrEmpty(capeURL)) {
-            textures.put(TextureType.CAPE, new Texture(capeURL));
+        if (!Strings.isNullOrEmpty(capeHash)) {
+            textures.put(TextureType.CAPE, new Texture(TextureType.CAPE, capeHash));
         }
     }
 
@@ -70,8 +69,13 @@ public class SkinModel {
     /**
      * @return skin, cape, elytra data or Optional.empty if the player doesn't have this attribute
      */
-    public Optional<Texture> getTexture(Texture.TextureType type) {
-        return Optional.ofNullable(textures.get(type));
+    public Optional<Texture> getTexture(TextureType type) {
+        Texture value = textures.get(type);
+        if (value != null) {
+            value.type = type;
+        }
+
+        return Optional.ofNullable(value);
     }
 
     /**
@@ -94,8 +98,8 @@ public class SkinModel {
             return true;
         }
 
-        if (other instanceof SkinModel) {
-            SkinModel that = (SkinModel) other;
+        if (other instanceof Skin) {
+            Skin that = (Skin) other;
             return timestamp == that.timestamp &&
                     Objects.equals(profileId, that.profileId) &&
                     Objects.equals(profileName, that.profileName) &&
