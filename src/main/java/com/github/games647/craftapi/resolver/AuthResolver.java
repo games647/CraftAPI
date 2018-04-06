@@ -33,7 +33,7 @@ public interface AuthResolver {
      * @return logged in account
      * @throws IOException I/O exception contacting the server
      */
-    Account authenticate(String email, String password) throws IOException;
+    Account authenticate(String email, String password) throws IOException, InvalidCredentialsException;
 
     /**
      * Changes the skin to the image that can be download from that URL. The URL have to be direct link without
