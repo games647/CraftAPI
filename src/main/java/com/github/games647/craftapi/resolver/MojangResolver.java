@@ -7,7 +7,8 @@ import com.github.games647.craftapi.model.auth.Account;
 import com.github.games647.craftapi.model.auth.AuthRequest;
 import com.github.games647.craftapi.model.auth.AuthResponse;
 import com.github.games647.craftapi.model.auth.Verification;
-import com.github.games647.craftapi.model.skin.Property;
+import com.github.games647.craftapi.model.skin.Model;
+import com.github.games647.craftapi.model.skin.SkinProperty;
 import com.github.games647.craftapi.model.skin.Textures;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -72,7 +73,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     }
 
     @Override
-    public Account authenticate(String email, String password) throws IOException {
+    public Account authenticate(String email, String password) throws IOException, InvalidCredentialsException {
         HttpURLConnection conn = getConnection(AUTH_URL);
         conn.setRequestMethod("POST");
         conn.setDoOutput(true);
@@ -87,7 +88,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     }
 
     @Override
-    public void changeSkin(Account account, String toUrl, boolean slimModel) throws IOException {
+    public void changeSkin(Account account, String toUrl, Model skinModel) throws IOException {
         String url = String.format(CHANGE_SKIN_URL, UUIDAdapter.toMojangId(account.getProfile().getId()));
 
         HttpURLConnection conn = getConnection(url);
@@ -98,7 +99,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
         try (BufferedWriter writer = new BufferedWriter(
                 new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8))) {
             writer.write("model=");
-            if (slimModel) {
+            if (skinModel == Model.SLIM) {
                 writer.write("slim");
             }
 
@@ -112,7 +113,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     }
 
     @Override
-    public void changeSkin(Account account, RenderedImage pngImage, boolean slimModel) throws IOException {
+    public void changeSkin(Account account, RenderedImage pngImage, Model skinModel) throws IOException {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
@@ -172,6 +173,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
             return Optional.empty();
         }
 
+        //todo: print errorstream on IOException
         Profile profile = readJson(conn.getInputStream(), Profile.class);
         cache.add(profile);
         return Optional.of(profile);
@@ -193,8 +195,8 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     }
 
     @Override
-    public Optional<Property> downloadSkin(UUID uuid) throws IOException, RateLimitException {
-        Optional<Property> optSkin = cache.getSkin(uuid);
+    public Optional<SkinProperty> downloadSkin(UUID uuid) throws IOException, RateLimitException {
+        Optional<SkinProperty> optSkin = cache.getSkin(uuid);
         if (optSkin.isPresent()) {
             return optSkin;
         }
@@ -212,7 +214,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
         }
 
         Textures texturesModel = readJson(conn.getInputStream(), Textures.class);
-        Property property = texturesModel.getProperties()[0];
+        SkinProperty property = texturesModel.getProperties()[0];
 
         cache.addSkin(uuid, property);
         return Optional.of(property);

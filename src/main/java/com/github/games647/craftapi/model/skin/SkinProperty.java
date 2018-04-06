@@ -11,9 +11,7 @@ import java.util.Objects;
 /**
  * Base64 encoded skin property.
  */
-public class Property {
-
-    public static String TEXTURE_KEY = "textures";
+public class SkinProperty {
 
     private static final String SIGNATURE_ALG = "SHA1withRSA";
 
@@ -26,7 +24,7 @@ public class Property {
      * @param value base64 encoded json skin data
      * @param signature base64 encoded signature
      */
-    public Property(String value, String signature) {
+    public SkinProperty(String value, String signature) {
         this.value = value;
         this.signature = signature;
     }
@@ -74,8 +72,8 @@ public class Property {
             return true;
         }
 
-        if (other instanceof Property) {
-            Property property = (Property) other;
+        if (other instanceof SkinProperty) {
+            SkinProperty property = (SkinProperty) other;
             return Objects.equals(value, property.value) &&
                     Objects.equals(signature, property.signature);
         }

@@ -3,6 +3,7 @@ package com.github.games647.craftapi.resolver.http;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +50,7 @@ public class RotatingSourceFactoryTest {
 
     @Test
     public void testCollectionModification() throws Exception {
-        List<InetAddress> localAddresses = new ArrayList<>();
+        Collection<InetAddress> localAddresses = new ArrayList<>();
         localAddresses.add(InetAddress.getByName("192.168.0.1"));
 
         sslFactory.setOutgoingAddresses(localAddresses);

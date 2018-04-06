@@ -6,7 +6,7 @@ import com.github.games647.craftapi.UUIDAdapter;
 import com.github.games647.craftapi.cache.Cache;
 import com.github.games647.craftapi.cache.MemoryCache;
 import com.github.games647.craftapi.model.skin.Skin;
-import com.github.games647.craftapi.model.skin.Property;
+import com.github.games647.craftapi.model.skin.SkinProperty;
 import com.github.games647.craftapi.resolver.http.RotatingSourceFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,7 +53,7 @@ public abstract class AbstractResolver {
      * @param property Base64 encoded skin property
      * @return decoded model
      */
-    public Skin decodeSkin(Property property) {
+    public Skin decodeSkin(SkinProperty property) {
         byte[] data = Base64.getDecoder().decode(property.getValue());
         String json = new String(data, StandardCharsets.UTF_8);
 
@@ -68,12 +68,12 @@ public abstract class AbstractResolver {
      * @param skinModel decoded skin model with signature
      * @return Base64 encoded skin property
      */
-    public Property encodeSkin(Skin skinModel) {
+    public SkinProperty encodeSkin(Skin skinModel) {
         String json = gson.toJson(skinModel);
 
         String encodedValue = Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
         String encodedSignature = Base64.getEncoder().encodeToString(skinModel.getSignature());
-        return new Property(encodedValue, encodedSignature);
+        return new SkinProperty(encodedValue, encodedSignature);
     }
 
     /**
@@ -120,7 +120,7 @@ public abstract class AbstractResolver {
     /**
      * Create a new HTTPConnection with default timeout and HTTP-Headers for json accept and user-agent.
      *
-     * @param url
+     * @param url http connection URL
      * @param proxy HTTP or SOCKS proxy through this connection
      * @return an unestablished HTTPConnection
      * @throws IOException I/O exception on opening the data channel

@@ -2,6 +2,7 @@ package com.github.games647.craftapi.resolver;
 
 import com.github.games647.craftapi.model.auth.Account;
 import com.github.games647.craftapi.model.auth.Verification;
+import com.github.games647.craftapi.model.skin.Model;
 
 import java.awt.image.RenderedImage;
 import java.io.IOException;
@@ -40,20 +41,20 @@ public interface AuthResolver {
      *
      * @param account authenticated account
      * @param toUrl the URL that Mojang should use for downloading the skin from
-     * @param slimModel true if slim model or false for steve
+     * @param skinModel skin arm model
      * @throws IOException I/O exception contacting the server
      */
-    void changeSkin(Account account, String toUrl, boolean slimModel) throws IOException;
+    void changeSkin(Account account, String toUrl, Model skinModel) throws IOException;
 
     /**
      * Changes the skin to the given image.
      *
      * @param account authenticated account
      * @param pngImage png image
-     * @param slimModel true if slim model or false for steve
+     * @param skinModel skin arm model
      * @throws IOException I/O exception contacting the server
      */
-    void changeSkin(Account account, RenderedImage pngImage, boolean slimModel) throws IOException;
+    void changeSkin(Account account, RenderedImage pngImage, Model skinModel) throws IOException;
 
     /**
      * Clears the uploaded skin.

@@ -12,12 +12,12 @@ public class Texture {
 
     private static final String URL_PREFIX = "http://textures.minecraft.net/texture/";
 
-    protected transient TextureType type;
+    protected transient Type type;
 
     private final String url;
     private final Map<String, Model> metadata;
 
-    protected Texture(TextureType type, String hash, Model skinModel) {
+    protected Texture(Type type, String hash, Model skinModel) {
         this.url = URL_PREFIX + hash;
         this.type = type;
 
@@ -31,10 +31,10 @@ public class Texture {
 
     public Texture(String hash, Model skinModel) {
         //only skins can have models
-        this(TextureType.SKIN, hash, skinModel);
+        this(Type.SKIN, hash, skinModel);
     }
 
-    public Texture(TextureType type, String hash) {
+    public Texture(Type type, String hash) {
         this(type, hash, null);
     }
 
@@ -43,7 +43,7 @@ public class Texture {
      */
     public Optional<Model> getArmModel() {
         //only skins have this data
-        if (type != TextureType.SKIN) {
+        if (type != Type.SKIN) {
             return Optional.empty();
         }
 
@@ -101,7 +101,7 @@ public class Texture {
     /**
      * Texture types of skin properties
      */
-    public enum TextureType {
+    public enum Type {
 
         SKIN,
 

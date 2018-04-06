@@ -1,7 +1,7 @@
 package com.github.games647.craftapi.cache;
 
 import com.github.games647.craftapi.model.Profile;
-import com.github.games647.craftapi.model.skin.Property;
+import com.github.games647.craftapi.model.skin.SkinProperty;
 import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableSet;
 
@@ -25,7 +25,7 @@ public class MemoryCache implements Cache {
     private final ConcurrentMap<UUID, Profile> uuidToProfileCache;
     private final ConcurrentMap<String, Profile> nameToProfileCache;
 
-    private final ConcurrentMap<UUID, Property> skinCache;
+    private final ConcurrentMap<UUID, SkinProperty> skinCache;
 
     /**
      * Creates a new memory cache with custom configuration options.
@@ -57,7 +57,7 @@ public class MemoryCache implements Cache {
     }
 
     @Override
-    public void addSkin(UUID uniqueId, Property property) {
+    public void addSkin(UUID uniqueId, SkinProperty property) {
         skinCache.put(uniqueId, property);
     }
 
@@ -90,7 +90,7 @@ public class MemoryCache implements Cache {
     }
 
     @Override
-    public Optional<Property> getSkin(UUID uniqueId) {
+    public Optional<SkinProperty> getSkin(UUID uniqueId) {
         return Optional.ofNullable(skinCache.get(uniqueId));
     }
 
@@ -100,7 +100,7 @@ public class MemoryCache implements Cache {
     }
 
     @Override
-    public ImmutableSet<Property> getCachedSkins() {
+    public ImmutableSet<SkinProperty> getCachedSkins() {
         return ImmutableSet.copyOf(skinCache.values());
     }
 

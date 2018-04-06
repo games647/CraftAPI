@@ -20,11 +20,13 @@ import static org.hamcrest.core.Is.is;
 
 import static org.junit.Assert.assertThat;
 
-public class PropertyTest {
+public class SkinPropertyTest {
 
     private static final String KEY_ALG = "RSA";
     private static final int KEY_SIZE = 4096;
     private static final String MOJANG_KEY_PATH = "/yggdrasil_session_pubkey.der";
+
+    //todo: add test case for older slim models were the metadata is before the URL
 
     public static final String SLIM_VALUE = "eyJ0aW1lc3RhbXAiOjE1MTk1NTI3OTgyMzIsInByb2ZpbGVJZCI6Ijc4YzNhNGU4MzdlNDQ4" +
             "MTg5ZGY4ZjljZTYxYzVlZmNjIiwicHJvZmlsZU5hbWUiOiJGMGdneU1vbnN0M3IiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4" +
@@ -73,19 +75,19 @@ public class PropertyTest {
 
     @Test
     public void testVerify() throws Exception {
-        Property property = new Property(STEVE_VALUE, STEVE_SIGNATURE);
+        SkinProperty property = new SkinProperty(STEVE_VALUE, STEVE_SIGNATURE);
         assertThat(property.isValid(publicKey), is(true));
     }
 
     @Test
     public void testVerifySlim() throws Exception {
-        Property property = new Property(SLIM_VALUE, SLIM_SIGNATURE);
+        SkinProperty property = new SkinProperty(SLIM_VALUE, SLIM_SIGNATURE);
         assertThat(property.isValid(publicKey), is(true));
     }
 
     @Test
     public void testVerifyCape() throws Exception {
-        Property property = new Property(CAPE_VALUE, CAPE_SIGNATURE);
+        SkinProperty property = new SkinProperty(CAPE_VALUE, CAPE_SIGNATURE);
         assertThat(property.isValid(publicKey), is(true));
     }
 
@@ -95,18 +97,18 @@ public class PropertyTest {
         keyGen.initialize(KEY_SIZE);
         publicKey = keyGen.generateKeyPair().getPublic();
 
-        Property property = new Property(STEVE_VALUE, STEVE_SIGNATURE);
+        SkinProperty property = new SkinProperty(STEVE_VALUE, STEVE_SIGNATURE);
         assertThat(property.isValid(publicKey), is(false));
     }
 
     @Test
     public void testVerifyInvalid() throws Exception {
-        Property property = new Property(STEVE_VALUE, SLIM_SIGNATURE);
+        SkinProperty property = new SkinProperty(STEVE_VALUE, SLIM_SIGNATURE);
         assertThat(property.isValid(publicKey), is(false));
     }
 
-    private PublicKey loadPublicKey() throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
-        URL keyUrl = PropertyTest.class.getResource(MOJANG_KEY_PATH);
+    private static PublicKey loadPublicKey() throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
+        URL keyUrl = SkinPropertyTest.class.getResource(MOJANG_KEY_PATH);
         KeySpec spec = new X509EncodedKeySpec(readAllBytes(keyUrl));
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALG);
         return keyFactory.generatePublic(spec);

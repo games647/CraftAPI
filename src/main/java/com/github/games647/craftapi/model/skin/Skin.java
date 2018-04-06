@@ -1,6 +1,6 @@
 package com.github.games647.craftapi.model.skin;
 
-import com.github.games647.craftapi.model.skin.Texture.TextureType;
+import com.github.games647.craftapi.model.skin.Texture.Type;
 import com.google.common.base.Strings;
 
 import java.time.Instant;
@@ -18,7 +18,7 @@ public class Skin {
     private final String profileName;
 
     private final boolean signatureRequired = true;
-    private final Map<TextureType, Texture> textures = new EnumMap<>(TextureType.class);
+    private final Map<Type, Texture> textures = new EnumMap<>(Type.class);
 
     private transient byte[] signature;
 
@@ -37,18 +37,18 @@ public class Skin {
         this.profileName = name;
 
         if (!Strings.isNullOrEmpty(skinHash)) {
-            textures.put(TextureType.SKIN, new Texture(skinHash, skinModel));
+            textures.put(Type.SKIN, new Texture(skinHash, skinModel));
         }
 
         if (!Strings.isNullOrEmpty(capeHash)) {
-            textures.put(TextureType.CAPE, new Texture(TextureType.CAPE, capeHash));
+            textures.put(Type.CAPE, new Texture(Type.CAPE, capeHash));
         }
     }
 
     /**
      * @return time at the skin was fetched from Mojang
      */
-    public Instant getTimestamp() {
+    public Instant getTimeFetched() {
         return timestamp;
     }
 
@@ -69,7 +69,7 @@ public class Skin {
     /**
      * @return skin, cape, elytra data or Optional.empty if the player doesn't have this attribute
      */
-    public Optional<Texture> getTexture(TextureType type) {
+    public Optional<Texture> getTexture(Type type) {
         Texture value = textures.get(type);
         if (value != null) {
             value.type = type;

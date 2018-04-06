@@ -9,11 +9,13 @@ import java.util.UUID;
  */
 public class Textures {
 
+    public static String KEY = "textures";
+
     private final UUID id;
     private final String name;
-    private final Property[] properties;
+    private final SkinProperty[] properties;
 
-    public Textures(UUID id, String name, Property[] properties) {
+    public Textures(UUID id, String name, SkinProperty[] properties) {
         this.id = id;
         this.name = name;
         this.properties = properties;
@@ -36,7 +38,7 @@ public class Textures {
     /**
      * @return copy of the skin properties
      */
-    public Property[] getProperties() {
+    public SkinProperty[] getProperties() {
         return Arrays.copyOf(properties, properties.length);
     }
 
