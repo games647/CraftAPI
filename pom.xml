@@ -18,6 +18,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <!--Default variable if snapshot builds cannot be detected by the build-helper plugin-->
+        <snapshotBuild>false</snapshotBuild>
+
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
@@ -36,6 +39,7 @@
 
     <build>
         <plugins>
+            <!--Set module name for Java 9 projects-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -47,6 +51,63 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
+            </plugin>
+
+            <!--Dynamically add Maven variable to check if it's a snapshot or release build-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.12</version>
+                <executions>
+                    <execution>
+                        <id>build-helper-regex-is-snapshot-used</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>snapshotBuild</name>
+                            <value>${project.version}</value>
+                            <regex>.*-SNAPSHOT</regex>
+                            <replacement>true</replacement>
+                            <failIfNoMatch>false</failIfNoMatch>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--Javadoc jar versions-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <!--Require 3+ for compatibility with the newest Maven version-->
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>javadoc-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <!-- skip when version is SNAPSHOT -->
+                            <skip>${snapshotBuild}</skip>
+                            <!--Force HTML5 builds-->
+                            <additionalJOption>-html5</additionalJOption>
+                            <detectLinks>true</detectLinks>
+                            <links>
+                                <!--JAVA SE-->
+                                <link>https://docs.oracle.com/javase/10/docs/api/</link>
+
+                                <!--Those links doesn't seem to be compatible for the javadoc plugin-->
+                                <!--GSON-->
+                                <!--<link>https://www.javadoc.io/doc/com.google.code.gson/gson/2.8.2</link>-->
+                                <!--Guava-->
+                                <!--<link>https://google.github.io/guava/releases/24.1-jre/api/docs/</link>-->
+                            </links>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

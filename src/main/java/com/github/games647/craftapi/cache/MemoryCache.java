@@ -31,9 +31,9 @@ public class MemoryCache implements Cache {
      * Creates a new memory cache with custom configuration options.
      *
      * @param uuidExpire uuid cache expiration time 0 to disable
-     * @param uuidSize uuid max cache size &le 0 to disable
+     * @param uuidSize uuid max cache size &le; 0 to disable
      * @param skinExpire skin cache expiration time 0 to disable
-     * @param skinSize skin max cache size &le 0 to disable
+     * @param skinSize skin max cache size &le; 0 to disable
      */
     public MemoryCache(Duration uuidExpire, int uuidSize, Duration skinExpire, int skinSize) {
         uuidToProfileCache = buildCache(uuidExpire.getSeconds(), uuidSize);
