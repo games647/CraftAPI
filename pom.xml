@@ -92,8 +92,6 @@
                         <configuration>
                             <!-- skip when version is SNAPSHOT -->
                             <skip>${snapshotBuild}</skip>
-                            <!--Force HTML5 builds-->
-                            <additionalJOption>-html5</additionalJOption>
                             <detectLinks>true</detectLinks>
                             <links>
                                 <!--JAVA SE-->
