@@ -1,5 +1,7 @@
 package com.github.games647.craftapi.model.skin;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
@@ -14,11 +16,16 @@ public class Texture {
 
     protected transient Type type;
 
-    private final String url;
+    private final URL url;
     private final Map<String, Model> metadata;
 
     protected Texture(Type type, String hash, Model skinModel) {
-        this.url = URL_PREFIX + hash;
+        try {
+            this.url = new URL(URL_PREFIX + hash);
+        } catch (MalformedURLException malformedURLEx) {
+            throw new IllegalArgumentException(malformedURLEx);
+        }
+
         this.type = type;
 
         if (skinModel == Model.SLIM) {
@@ -59,7 +66,7 @@ public class Texture {
     /**
      * @return complete url where the client can find the skin
      */
-    public String getURL() {
+    public URL getURL() {
         return url;
     }
 
@@ -68,12 +75,14 @@ public class Texture {
      *          Example: http://textures.minecraft.net/texture/HASH to HASH
      */
     public String getHash() {
-        int lastSeparator = url.lastIndexOf('/');
+        String path = url.getPath();
+
+        int lastSeparator = path.lastIndexOf('/');
         if (lastSeparator < 0) {
-            return url;
+            return path;
         }
 
-        return url.substring(lastSeparator + 1);
+        return path.substring(lastSeparator + 1);
     }
 
     @Override
