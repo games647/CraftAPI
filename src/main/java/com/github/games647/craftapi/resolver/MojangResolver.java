@@ -23,6 +23,7 @@ import java.net.Proxy;
 import java.net.Proxy.Type;
 import java.net.ProxySelector;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -88,7 +89,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     }
 
     @Override
-    public void changeSkin(Account account, String toUrl, Model skinModel) throws IOException {
+    public void changeSkin(Account account, URL toUrl, Model skinModel) throws IOException {
         String url = String.format(CHANGE_SKIN_URL, UUIDAdapter.toMojangId(account.getProfile().getId()));
 
         HttpURLConnection conn = getConnection(url);
@@ -103,7 +104,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
                 writer.write("slim");
             }
 
-            writer.write("&url=" + URLEncoder.encode(toUrl, StandardCharsets.UTF_8.name()));
+            writer.write("&url=" + URLEncoder.encode(toUrl.toExternalForm(), StandardCharsets.UTF_8.name()));
         }
 
         int responseCode = conn.getResponseCode();

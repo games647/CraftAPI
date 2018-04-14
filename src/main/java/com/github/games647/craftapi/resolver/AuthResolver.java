@@ -7,6 +7,7 @@ import com.github.games647.craftapi.model.skin.Model;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URL;
 import java.util.Optional;
 
 /**
@@ -44,7 +45,7 @@ public interface AuthResolver {
      * @param skinModel skin arm model
      * @throws IOException I/O exception contacting the server
      */
-    void changeSkin(Account account, String toUrl, Model skinModel) throws IOException;
+    void changeSkin(Account account, URL toUrl, Model skinModel) throws IOException;
 
     /**
      * Changes the skin to the given image.
