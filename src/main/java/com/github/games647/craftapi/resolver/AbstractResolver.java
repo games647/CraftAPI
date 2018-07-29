@@ -34,7 +34,7 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public abstract class AbstractResolver {
 
-    private static final int TIMEOUT = 3_000;
+    private static final int TIMEOUT = 5_000;
     private static final String USER_AGENT = "CraftAPIClient";
 
     protected final Predicate<String> validNamePredicate = new NamePredicate();
