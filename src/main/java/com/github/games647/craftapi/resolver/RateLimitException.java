@@ -1,5 +1,7 @@
 package com.github.games647.craftapi.resolver;
 
+import java.util.UUID;
+
 /**
  * Exception that occurs if we made too many requests against an online resolver.
  */
@@ -11,4 +13,11 @@ public class RateLimitException extends Exception {
         super("Too many requests");
     }
 
+    public RateLimitException(String playerName) {
+        super("Too many requests for the UUID of player " + playerName);
+    }
+
+    public RateLimitException(UUID skinId) {
+        super("Too many requests for skin " + skinId);
+    }
 }
