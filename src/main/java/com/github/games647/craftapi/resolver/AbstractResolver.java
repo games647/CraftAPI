@@ -34,11 +34,11 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public abstract class AbstractResolver {
 
-    private static final int TIMEOUT = 5_000;
+    private static final int TIMEOUT = 10_000;
     private static final String USER_AGENT = "CraftAPIClient";
 
     protected final Predicate<String> validNamePredicate = new NamePredicate();
-    protected final RotatingSourceFactory sslFactory = new RotatingSourceFactory();
+    protected RotatingSourceFactory sslFactory;
 
     protected Cache cache = new MemoryCache();
 
@@ -134,7 +134,9 @@ public abstract class AbstractResolver {
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setRequestProperty("User-Agent", USER_AGENT);
 
-        conn.setSSLSocketFactory(sslFactory);
+        // do not set factory if not necessary, because it could help to keep the connection alive
+        if (sslFactory != null)
+            conn.setSSLSocketFactory(sslFactory);
         return conn;
     }
 
@@ -160,6 +162,15 @@ public abstract class AbstractResolver {
      * @param addresses all outgoing IPv4 addresses that are available or empty to disable it.
      */
     public void setOutgoingAddresses(Collection<InetAddress> addresses) {
+        if (addresses.isEmpty()) {
+            sslFactory = null;
+            return;
+        }
+
+        if (sslFactory == null) {
+            sslFactory = new RotatingSourceFactory();
+        }
+
         sslFactory.setOutgoingAddresses(addresses);
     }
 }
