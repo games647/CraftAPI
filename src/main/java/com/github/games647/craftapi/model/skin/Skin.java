@@ -67,6 +67,7 @@ public class Skin {
     }
 
     /**
+     * @param type requesting skin component
      * @return skin, cape, elytra data or Optional.empty if the player doesn't have this attribute
      */
     public Optional<Texture> getTexture(Type type) {

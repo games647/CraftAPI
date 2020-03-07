@@ -33,6 +33,7 @@ public interface AuthResolver {
      * @param password plain text password
      * @return logged in account
      * @throws IOException I/O exception contacting the server
+     * @throws InvalidCredentialsException invalid auth data
      */
     Account authenticate(String email, String password) throws IOException, InvalidCredentialsException;
 
@@ -62,6 +63,7 @@ public interface AuthResolver {
      *
      * @param account authenticated account
      * @throws IOException I/O exception contacting the server
+     * @return true if successful
      */
     boolean resetSkin(Account account) throws IOException;
 
