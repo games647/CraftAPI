@@ -62,8 +62,8 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     @Override
     public Optional<Verification> hasJoined(String username, String serverHash, InetAddress hostIp)
             throws IOException {
-        String encodedIp = URLEncoder.encode(hostIp.getHostAddress(), StandardCharsets.UTF_8.name());
-        String url = String.format(HAS_JOINED_URL, username, serverHash, encodedIp);
+        String encodedIP = URLEncoder.encode(hostIp.getHostAddress(), StandardCharsets.UTF_8.name());
+        String url = String.format(HAS_JOINED_URL, username, serverHash, encodedIP);
 
         HttpURLConnection conn = getConnection(url);
         if (conn.getResponseCode() == HttpURLConnection.HTTP_NO_CONTENT) {
