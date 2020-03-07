@@ -37,6 +37,9 @@ public abstract class AbstractResolver {
     private static final int TIMEOUT = 10_000;
     private static final String USER_AGENT = "CraftAPIClient";
 
+    // skip only maximum amount to prevent too long transfers that will be just discarded
+    private static final int MAX_SKIP = 8 * 1024;
+
     protected final Predicate<String> validNamePredicate = new NamePredicate();
     protected RotatingSourceFactory sslFactory;
 
@@ -141,6 +144,57 @@ public abstract class AbstractResolver {
     }
 
     /**
+     * Reads the input stream and error stream, but discards all data collected. This is necessary to make the
+     * connection available for further requests using HTTP keep-alives.
+     *
+     * @param conn http connection
+     * @throws IOException io exception on reading
+     */
+    protected void discard(HttpURLConnection conn) throws IOException {
+        parseRequest(conn, in -> in.skip(MAX_SKIP));
+    }
+
+    /**
+     * Consume input stream and discards every data in error stream if available. In order that HTTP connections can be
+     * re-used (keep-alive), all output streams should be fully written and closed as well as all input streams
+     * fully consumed and closed ({@link HttpURLConnection#getInputStream()} and
+     * {@link HttpURLConnection#getErrorStream()}).
+     * <p>
+     * By default Java will consume part of the input stream if not fully read, but it doesn't apply to error streams
+     * and the connection still have to be closed nevertheless. Furthermore a connection implicitly opened by
+     * {@link HttpURLConnection#getResponseCode()} or {@link HttpURLConnection#getOutputStream()}} should also be
+     * consumed and closed by this.
+     *
+     * @param conn http connection
+     * @param consumer consumer that should fully read the input
+     * @param <R> return type of the consumer
+     * @return return value of the consumer
+     * @throws IOException on reading the original inputstream
+     * @see <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/net/http-keepalive.html">
+     *     Peristent Connections
+     *     </a>
+     */
+    protected <R> R parseRequest(HttpURLConnection conn, InputStreamAction<R> consumer) throws IOException {
+        // execute-around pattern
+        try (InputStream in = conn.getInputStream()) {
+            // should read fully
+            return consumer.useStream(in);
+        } catch (IOException ioEx) {
+            // error stream is only created on opening getInputStream while encountering an IOException
+            try (InputStream errStream = conn.getErrorStream()) {
+                // can be null if there is no content
+                if (errStream != null)
+                    // should read fully
+                    errStream.skip(MAX_SKIP);
+            } catch (IOException errIoEx) {
+                // re-throw only the original exception, because we ignore the content of error stream completely
+            }
+
+            throw ioEx;
+        }
+    }
+
+    /**
      * @return the current cache backend.
      */
     public Cache getCache() {
@@ -172,5 +226,10 @@ public abstract class AbstractResolver {
         }
 
         sslFactory.setOutgoingAddresses(addresses);
+    }
+
+    @FunctionalInterface
+    protected interface InputStreamAction<R> {
+        R useStream(InputStream stream) throws IOException;
     }
 }

@@ -16,6 +16,7 @@ import com.google.common.collect.ImmutableSet;
 import java.awt.image.RenderedImage;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -66,11 +67,12 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
         String url = String.format(HAS_JOINED_URL, username, serverHash, encodedIP);
 
         HttpURLConnection conn = getConnection(url);
-        if (conn.getResponseCode() == HttpURLConnection.HTTP_NO_CONTENT) {
+        int responseCode = conn.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
             return Optional.empty();
         }
 
-        return Optional.of(readJson(conn.getInputStream(), Verification.class));
+        return Optional.of(parseRequest(conn, in -> readJson(in, Verification.class)));
     }
 
     @Override
@@ -79,12 +81,15 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
         conn.setRequestMethod("POST");
         conn.setDoOutput(true);
 
-        try (BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8))) {
+        try (
+                OutputStream out = conn.getOutputStream();
+                OutputStreamWriter outWriter = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                BufferedWriter writer = new BufferedWriter(outWriter)
+        ) {
             writer.append(gson.toJson(new AuthRequest(email, password)));
         }
 
-        AuthResponse authResponse = readJson(conn.getInputStream(), AuthResponse.class);
+        AuthResponse authResponse = parseRequest(conn, in -> readJson(in, AuthResponse.class));
         return new Account(authResponse.getSelectedProfile(), authResponse.getAccessToken());
     }
 
@@ -97,17 +102,22 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
         conn.setDoOutput(true);
 
         conn.addRequestProperty("Authorization", "Bearer " + account.getAccessToken());
-        try (BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8))) {
+        try (
+                OutputStream out = conn.getOutputStream();
+                OutputStreamWriter outWriter = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                BufferedWriter writer = new BufferedWriter(outWriter)
+        ) {
             writer.write("model=");
             if (skinModel == Model.SLIM) {
                 writer.write("slim");
             }
 
-            writer.write("&url=" + URLEncoder.encode(toUrl.toExternalForm(), StandardCharsets.UTF_8.name()));
+            final String skinUrl = toUrl.toExternalForm();
+            writer.write("&url=" + URLEncoder.encode(skinUrl, StandardCharsets.UTF_8.name()));
         }
 
         int responseCode = conn.getResponseCode();
+        discard(conn);
         if (responseCode != HttpURLConnection.HTTP_OK) {
             throw new IOException("Response code is not Ok: " + responseCode);
         }
@@ -127,6 +137,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
         conn.addRequestProperty("Authorization", "Bearer " + account.getAccessToken());
 
         int responseCode = conn.getResponseCode();
+        discard(conn);
         return responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_NO_CONTENT;
     }
 
@@ -150,12 +161,6 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
         String url = UUID_URL + name;
         HttpURLConnection conn = getConnection(url);
 
-        // if (requests.size() > maxNameRequests) {
-        //     conn = getProxyConnection(url);
-        // } else {
-        //     conn = getConnection(url);
-        // }
-
         int responseCode = conn.getResponseCode();
         if (responseCode == RateLimitException.RATE_LIMIT_RESPONSE_CODE) {
             if (conn.usingProxy()) {
@@ -165,10 +170,6 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
             conn = getProxyConnection(url);
             responseCode = conn.getResponseCode();
         }
-
-        // if (!conn.usingProxy()) {
-        //     requests.put(new Object(), new Object());
-        // }
 
         if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
             return Optional.empty();
@@ -187,11 +188,6 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
             return optProfile;
         }
 
-        // requests.put(new Object(), new Object());
-        // if (requests.size() >= maxNameRequests) {
-        //     throw new RateLimitException();
-        // }
-
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
@@ -207,6 +203,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
 
         int responseCode = conn.getResponseCode();
         if (responseCode == RateLimitException.RATE_LIMIT_RESPONSE_CODE) {
+            discard(conn);
             throw new RateLimitException();
         }
 
@@ -214,7 +211,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
             return Optional.empty();
         }
 
-        Textures texturesModel = readJson(conn.getInputStream(), Textures.class);
+        Textures texturesModel = parseRequest(conn, in -> readJson(in, Textures.class));
         SkinProperty property = texturesModel.getProperties()[0];
 
         cache.addSkin(uuid, property);
@@ -230,6 +227,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
         HttpURLConnection conn = getConnection(UUID_URL, proxy);
         int responseCode = conn.getResponseCode();
         if (responseCode == RateLimitException.RATE_LIMIT_RESPONSE_CODE) {
+            discard(conn);
             throw new RateLimitException();
         }
 
