@@ -224,14 +224,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
             throw new RateLimitException();
         }
 
-        HttpURLConnection conn = getConnection(UUID_URL, proxy);
-        int responseCode = conn.getResponseCode();
-        if (responseCode == RateLimitException.RATE_LIMIT_RESPONSE_CODE) {
-            discard(conn);
-            throw new RateLimitException();
-        }
-
-        return conn;
+        return getConnection(UUID_URL, proxy);
     }
 
     /**
