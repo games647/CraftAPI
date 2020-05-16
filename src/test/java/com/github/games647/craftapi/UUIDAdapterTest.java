@@ -59,4 +59,16 @@ public class UUIDAdapterTest {
         UUID jebId = UUID.fromString(JEB_PREMIUM_ID);
         assertThat(UUIDAdapter.parseId(JEB_MOJANG_ID), is(jebId));
     }
+
+    @Test
+    public void testParsingDashed() throws Exception {
+        UUID boneId = UUID.fromString(DINNERBONE_PREMIUM_ID);
+        assertThat(UUIDAdapter.parseDashedIdFast(DINNERBONE_PREMIUM_ID), is(boneId));
+    }
+
+    @Test
+    public void testToString() throws Exception {
+        UUID boneId = UUID.fromString(DINNERBONE_PREMIUM_ID);
+        assertThat(UUIDAdapter.toStringFast(boneId), is(DINNERBONE_PREMIUM_ID));
+    }
 }

@@ -38,7 +38,7 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
      */
     public static UUID parseId(String withoutDashes) {
         // TODO: Implement without dashes directly into FastUUID
-        return parseDashedId(UUID_PATTERN.matcher(withoutDashes).replaceAll("$1-$2-$3-$4-$5"));
+        return parseDashedIdFast(UUID_PATTERN.matcher(withoutDashes).replaceAll("$1-$2-$3-$4-$5"));
     }
 
     /**
@@ -48,7 +48,7 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
      * @param uuidDashed uuid with dashes
      * @return parsed UUID
      */
-    public static UUID parseDashedId(CharSequence uuidDashed) {
+    public static UUID parseDashedIdFast(CharSequence uuidDashed) {
         return FastUUID.parseUUID(uuidDashed);
     }
 
