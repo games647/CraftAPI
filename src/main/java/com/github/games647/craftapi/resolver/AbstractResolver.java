@@ -169,7 +169,7 @@ public abstract class AbstractResolver {
      * @param consumer consumer that should fully read the input
      * @param <R> return type of the consumer
      * @return return value of the consumer
-     * @throws IOException on reading the original inputstream
+     * @throws IOException on reading the original input stream
      * @see <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/net/http-keepalive.html">
      *     Peristent Connections
      *     </a>

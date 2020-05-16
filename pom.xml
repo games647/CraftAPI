@@ -7,7 +7,7 @@
     <packaging>jar</packaging>
 
     <name>CraftAPI</name>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.4</version>
     <inceptionYear>2018</inceptionYear>
 
     <url>https://github.com/games647/CraftAPI/</url>
@@ -107,7 +107,13 @@
     </build>
 
     <dependencies>
-        <!--Warning: Minimum dependency version for Minecraft 1.8.8 -->
+        <dependency>
+            <groupId>com.eatthepath</groupId>
+            <artifactId>fast-uuid</artifactId>
+            <version>0.1</version>
+        </dependency>
+
+        <!-- Minimum dependency version for Minecraft 1.8.8 -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
