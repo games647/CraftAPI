@@ -21,6 +21,8 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
     private static final Pattern UUID_PATTERN = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
     private static final Pattern DASH_PATTERN = Pattern.compile("-", Pattern.LITERAL);
 
+    private static final String OFFLINE_PREFIX = "OfflinePlayer:";
+
     @Override
     public void write(JsonWriter out, UUID value) throws IOException {
         out.value(toMojangId(value));
@@ -79,6 +81,6 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
      */
     public static UUID generateOfflineId(String playerName) {
         Objects.requireNonNull(playerName);
-        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + playerName).getBytes(StandardCharsets.UTF_8));
+        return UUID.nameUUIDFromBytes((OFFLINE_PREFIX + playerName).getBytes(StandardCharsets.UTF_8));
     }
 }
