@@ -107,12 +107,6 @@
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>com.eatthepath</groupId>
-            <artifactId>fast-uuid</artifactId>
-            <version>0.1</version>
-        </dependency>
-
         <!-- Minimum dependency version for Minecraft 1.8.8 -->
         <dependency>
             <groupId>com.google.code.gson</groupId>

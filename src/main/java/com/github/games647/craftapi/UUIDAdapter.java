@@ -1,6 +1,5 @@
 package com.github.games647.craftapi;
 
-import com.eatthepath.uuid.FastUUID;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -39,8 +38,7 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
      * @return parsed UUID
      */
     public static UUID parseId(String withoutDashes) {
-        // TODO: Implement without dashes directly into FastUUID
-        return parseDashedIdFast(UUID_PATTERN.matcher(withoutDashes).replaceAll("$1-$2-$3-$4-$5"));
+        return FastUUID.parseUUIDUndashed(withoutDashes);
     }
 
     /**
@@ -60,8 +58,7 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
      * @return UUID without dashes
      */
     public static String toMojangId(UUID uniqueId) {
-        // TODO: Implement dash replace directly into FastUUID
-        return DASH_PATTERN.matcher(toStringFast(uniqueId)).replaceAll("");
+        return FastUUID.toStringUndashed(uniqueId);
     }
 
     /**
