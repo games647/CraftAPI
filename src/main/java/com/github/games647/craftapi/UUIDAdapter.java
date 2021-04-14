@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 /**
  * Type adapter for converting UUIDs from Mojang's string representation into a Java version.
@@ -16,9 +15,6 @@ import java.util.regex.Pattern;
  * It uses a faster UUID implementation for toString() (if < Java 9) outputs and dashed UUIDs parsing.
  */
 public class UUIDAdapter extends TypeAdapter<UUID> {
-
-    private static final Pattern UUID_PATTERN = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
-    private static final Pattern DASH_PATTERN = Pattern.compile("-", Pattern.LITERAL);
 
     private static final String OFFLINE_PREFIX = "OfflinePlayer:";
 

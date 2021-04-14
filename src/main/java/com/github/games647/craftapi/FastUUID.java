@@ -30,6 +30,12 @@ import java.util.UUID;
  * This is a modified FastUUID implementation. The primary difference is that it does not dash its
  * UUIDs. As the native Java 9+ UUID.toString() implementation dashes its UUIDs, we use the FastUUID
  * internal method, which ought to be faster than a String.replace().
+ *
+ * Source:
+ * <ul>
+ *     <li>https://github.com/VelocityPowered/Velocity/blob/91e9769c5aab7a629c1cc7f2a3bc3f6f88ba8582/api/src/main/java/com/velocitypowered/api/util/FastUuidSansHyphens.java</li>
+ *     <li>https://github.com/jchambers/fast-uuid</li>
+ * </ul>
  */
 class FastUUID {
 
