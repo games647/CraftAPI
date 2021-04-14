@@ -64,6 +64,9 @@ requests if possible.
 
 ## Credits
 
+* [Fast-UUID](https://github.com/jchambers/fast-uuid) - MIT license
+  * Remember to include its license file
+
 Inspired by
 
 * Sponge's
@@ -73,3 +76,4 @@ Inspired by
 * [Mojang's Authlib](https://github.com/Techcable/Authlib)
 * [Mojang's AccountsClient](https://github.com/JonMcPherson/AccountsClient/)
 * [API proxy Interceptor](https://github.com/Shevchik/MojangAPIProxy)
+

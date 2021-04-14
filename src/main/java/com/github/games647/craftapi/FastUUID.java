@@ -1,4 +1,4 @@
-/*
+package com.github.games647.craftapi;/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2018 Jon Chambers
@@ -22,22 +22,23 @@
  * SOFTWARE.
  */
 
-package com.github.games647.craftapi;
-
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
- * This is a modified FastUUID implementation. The primary difference is that it does not dash its
- * UUIDs. As the native Java 9+ UUID.toString() implementation dashes its UUIDs, we use the FastUUID
- * internal method, which ought to be faster than a String.replace().
+ * <p>A utility class for quickly and efficiently parsing {@link java.util.UUID} instances from strings and writing UUID
+ * instances as strings. The methods contained in this class are optimized for speed and to minimize garbage collection
+ * pressure. In benchmarks, {@link #parseUUID(CharSequence)} is a little more than 14 times faster than
+ * {@link UUID#fromString(String)}, and {@link #toString(UUID)} is a little more than six times faster than
+ * {@link UUID#toString()} when compared to the implementations in Java 8 and older. Under Java 9 and newer,
+ * {@link #parseUUID(CharSequence)} is about six times faster than the JDK implementation and {@link #toString(UUID)}
+ * does not offer any performance enhancements (or regressions!).</p>
  *
- * Source:
- * <ul>
- *     <li>https://github.com/VelocityPowered/Velocity/blob/91e9769c5aab7a629c1cc7f2a3bc3f6f88ba8582/api/src/main/java/com/velocitypowered/api/util/FastUuidSansHyphens.java</li>
- *     <li>https://github.com/jchambers/fast-uuid</li>
- * </ul>
+ * Modified to include a variant with undashed UUIDs.
+ *
+ * @author <a href="https://github.com/jchambers/">Jon Chambers</a>
  */
-class FastUUID {
+public class FastUUID {
 
     private static final boolean USE_JDK_UUID_TO_STRING;
 
@@ -54,18 +55,16 @@ class FastUUID {
         USE_JDK_UUID_TO_STRING = majorVersion >= 9;
     }
 
-    private static final int MOJANG_BROKEN_UUID_LENGTH = 32;
+    private static final int UUID_STRING_LENGTH = 36;
+    private static final int UUID_UNDASHED_STRING_LENGTH = 32; // 36 - 4 (dashes)
 
     private static final char[] HEX_DIGITS =
             { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
     private static final long[] HEX_VALUES = new long[128];
-    private static final int UUID_STRING_LENGTH = 36;
 
     static {
-        for (int i = 0; i < HEX_VALUES.length; i++) {
-            HEX_VALUES[i] = -1;
-        }
+        Arrays.fill(HEX_VALUES, -1);
 
         HEX_VALUES['0'] = 0x0;
         HEX_VALUES['1'] = 0x1;
@@ -108,7 +107,7 @@ class FastUUID {
      * @throws IllegalArgumentException if the given character sequence does not conform to the string representation as
      * described in {@link UUID#toString()}
      */
-    public static UUID parseUUID(CharSequence uuidSequence) {
+    public static UUID parseUUIDDashed(CharSequence uuidSequence) {
         if (uuidSequence.length() != UUID_STRING_LENGTH ||
                 uuidSequence.charAt(8) != '-' ||
                 uuidSequence.charAt(13) != '-' ||
@@ -158,19 +157,8 @@ class FastUUID {
         return new UUID(mostSignificantBits, leastSignificantBits);
     }
 
-    /**
-     * Parses a UUID from the given character sequence. The character sequence must represent a
-     * Mojang UUID.
-     *
-     * @param uuidSequence the character sequence from which to parse a UUID
-     *
-     * @return the UUID represented by the given character sequence
-     *
-     * @throws IllegalArgumentException if the given character sequence does not conform to the string
-     *         representation of a Mojang UUID.
-     */
-    public static UUID parseUUIDUndashed(CharSequence uuidSequence) {
-        if (uuidSequence.length() != MOJANG_BROKEN_UUID_LENGTH) {
+    public static UUID parseUUIDUUndashed(CharSequence uuidSequence) {
+        if (uuidSequence.length() != UUID_UNDASHED_STRING_LENGTH) {
             throw new IllegalArgumentException("Illegal UUID string: " + uuidSequence);
         }
 
@@ -214,56 +202,6 @@ class FastUUID {
     }
 
     /**
-     * Returns a string representation of the given UUID. The returned string is formatted as a
-     * Mojang-style UUID.
-     *
-     * @param uuid the UUID to represent as a string
-     *
-     * @return a string representation of the given UUID
-     */
-    public static String toStringUndashed(UUID uuid) {
-        final long mostSignificantBits = uuid.getMostSignificantBits();
-        final long leastSignificantBits = uuid.getLeastSignificantBits();
-
-        final char[] uuidChars = new char[MOJANG_BROKEN_UUID_LENGTH];
-
-        uuidChars[0]  = HEX_DIGITS[(int) ((mostSignificantBits & 0xf000000000000000L) >>> 60)];
-        uuidChars[1]  = HEX_DIGITS[(int) ((mostSignificantBits & 0x0f00000000000000L) >>> 56)];
-        uuidChars[2]  = HEX_DIGITS[(int) ((mostSignificantBits & 0x00f0000000000000L) >>> 52)];
-        uuidChars[3]  = HEX_DIGITS[(int) ((mostSignificantBits & 0x000f000000000000L) >>> 48)];
-        uuidChars[4]  = HEX_DIGITS[(int) ((mostSignificantBits & 0x0000f00000000000L) >>> 44)];
-        uuidChars[5]  = HEX_DIGITS[(int) ((mostSignificantBits & 0x00000f0000000000L) >>> 40)];
-        uuidChars[6]  = HEX_DIGITS[(int) ((mostSignificantBits & 0x000000f000000000L) >>> 36)];
-        uuidChars[7]  = HEX_DIGITS[(int) ((mostSignificantBits & 0x0000000f00000000L) >>> 32)];
-        uuidChars[8]  = HEX_DIGITS[(int) ((mostSignificantBits & 0x00000000f0000000L) >>> 28)];
-        uuidChars[9]  = HEX_DIGITS[(int) ((mostSignificantBits & 0x000000000f000000L) >>> 24)];
-        uuidChars[10] = HEX_DIGITS[(int) ((mostSignificantBits & 0x0000000000f00000L) >>> 20)];
-        uuidChars[11] = HEX_DIGITS[(int) ((mostSignificantBits & 0x00000000000f0000L) >>> 16)];
-        uuidChars[12] = HEX_DIGITS[(int) ((mostSignificantBits & 0x000000000000f000L) >>> 12)];
-        uuidChars[13] = HEX_DIGITS[(int) ((mostSignificantBits & 0x0000000000000f00L) >>> 8)];
-        uuidChars[14] = HEX_DIGITS[(int) ((mostSignificantBits & 0x00000000000000f0L) >>> 4)];
-        uuidChars[15] = HEX_DIGITS[(int)  (mostSignificantBits & 0x000000000000000fL)];
-        uuidChars[16] = HEX_DIGITS[(int) ((leastSignificantBits & 0xf000000000000000L) >>> 60)];
-        uuidChars[17] = HEX_DIGITS[(int) ((leastSignificantBits & 0x0f00000000000000L) >>> 56)];
-        uuidChars[18] = HEX_DIGITS[(int) ((leastSignificantBits & 0x00f0000000000000L) >>> 52)];
-        uuidChars[19] = HEX_DIGITS[(int) ((leastSignificantBits & 0x000f000000000000L) >>> 48)];
-        uuidChars[20] = HEX_DIGITS[(int) ((leastSignificantBits & 0x0000f00000000000L) >>> 44)];
-        uuidChars[21] = HEX_DIGITS[(int) ((leastSignificantBits & 0x00000f0000000000L) >>> 40)];
-        uuidChars[22] = HEX_DIGITS[(int) ((leastSignificantBits & 0x000000f000000000L) >>> 36)];
-        uuidChars[23] = HEX_DIGITS[(int) ((leastSignificantBits & 0x0000000f00000000L) >>> 32)];
-        uuidChars[24] = HEX_DIGITS[(int) ((leastSignificantBits & 0x00000000f0000000L) >>> 28)];
-        uuidChars[25] = HEX_DIGITS[(int) ((leastSignificantBits & 0x000000000f000000L) >>> 24)];
-        uuidChars[26] = HEX_DIGITS[(int) ((leastSignificantBits & 0x0000000000f00000L) >>> 20)];
-        uuidChars[27] = HEX_DIGITS[(int) ((leastSignificantBits & 0x00000000000f0000L) >>> 16)];
-        uuidChars[28] = HEX_DIGITS[(int) ((leastSignificantBits & 0x000000000000f000L) >>> 12)];
-        uuidChars[29] = HEX_DIGITS[(int) ((leastSignificantBits & 0x0000000000000f00L) >>> 8)];
-        uuidChars[30] = HEX_DIGITS[(int) ((leastSignificantBits & 0x00000000000000f0L) >>> 4)];
-        uuidChars[31] = HEX_DIGITS[(int)  (leastSignificantBits & 0x000000000000000fL)];
-
-        return new String(uuidChars);
-    }
-
-    /**
      * Returns a string representation of the given UUID. The returned string is formatted as described in
      * {@link UUID#toString()}.
      *
@@ -271,7 +209,7 @@ class FastUUID {
      *
      * @return a string representation of the given UUID
      */
-    public static String toString(UUID uuid) {
+    public static String toStringDashed(UUID uuid) {
         if (USE_JDK_UUID_TO_STRING) {
             // OpenJDK 9 and newer use a fancy native approach to converting UUIDs to strings and we're better off using
             // that if it's available.
@@ -319,6 +257,56 @@ class FastUUID {
         uuidChars[33] = HEX_DIGITS[(int) ((leastSignificantBits & 0x0000000000000f00L) >>> 8)];
         uuidChars[34] = HEX_DIGITS[(int) ((leastSignificantBits & 0x00000000000000f0L) >>> 4)];
         uuidChars[35] = HEX_DIGITS[(int)  (leastSignificantBits & 0x000000000000000fL)];
+
+        return new String(uuidChars);
+    }
+
+    /**
+     * Returns a string representation of the given UUID. The returned string is formatted as described in
+     * {@link UUID#toString()} without dashes.
+     *
+     * @param uuid the UUID to represent as a string
+     *
+     * @return a string representation of the given UUID
+     */
+    public static String toStringUndashed(UUID uuid) {
+        final long mostSignificantBits = uuid.getMostSignificantBits();
+        final long leastSignificantBits = uuid.getLeastSignificantBits();
+
+        final char[] uuidChars = new char[UUID_UNDASHED_STRING_LENGTH];
+
+        uuidChars[0] = HEX_DIGITS[(int) ((mostSignificantBits & 0xf000000000000000L) >>> 60)];
+        uuidChars[1] = HEX_DIGITS[(int) ((mostSignificantBits & 0x0f00000000000000L) >>> 56)];
+        uuidChars[2] = HEX_DIGITS[(int) ((mostSignificantBits & 0x00f0000000000000L) >>> 52)];
+        uuidChars[3] = HEX_DIGITS[(int) ((mostSignificantBits & 0x000f000000000000L) >>> 48)];
+        uuidChars[4] = HEX_DIGITS[(int) ((mostSignificantBits & 0x0000f00000000000L) >>> 44)];
+        uuidChars[5] = HEX_DIGITS[(int) ((mostSignificantBits & 0x00000f0000000000L) >>> 40)];
+        uuidChars[6] = HEX_DIGITS[(int) ((mostSignificantBits & 0x000000f000000000L) >>> 36)];
+        uuidChars[7] = HEX_DIGITS[(int) ((mostSignificantBits & 0x0000000f00000000L) >>> 32)];
+        uuidChars[8] = HEX_DIGITS[(int) ((mostSignificantBits & 0x00000000f0000000L) >>> 28)];
+        uuidChars[9] = HEX_DIGITS[(int) ((mostSignificantBits & 0x000000000f000000L) >>> 24)];
+        uuidChars[10] = HEX_DIGITS[(int) ((mostSignificantBits & 0x0000000000f00000L) >>> 20)];
+        uuidChars[11] = HEX_DIGITS[(int) ((mostSignificantBits & 0x00000000000f0000L) >>> 16)];
+        uuidChars[12] = HEX_DIGITS[(int) ((mostSignificantBits & 0x000000000000f000L) >>> 12)];
+        uuidChars[13] = HEX_DIGITS[(int) ((mostSignificantBits & 0x0000000000000f00L) >>> 8)];
+        uuidChars[14] = HEX_DIGITS[(int) ((mostSignificantBits & 0x00000000000000f0L) >>> 4)];
+        uuidChars[15] = HEX_DIGITS[(int) (mostSignificantBits & 0x000000000000000fL)];
+        uuidChars[16] = HEX_DIGITS[(int) ((leastSignificantBits & 0xf000000000000000L) >>> 60)];
+        uuidChars[17] = HEX_DIGITS[(int) ((leastSignificantBits & 0x0f00000000000000L) >>> 56)];
+        uuidChars[18] = HEX_DIGITS[(int) ((leastSignificantBits & 0x00f0000000000000L) >>> 52)];
+        uuidChars[19] = HEX_DIGITS[(int) ((leastSignificantBits & 0x000f000000000000L) >>> 48)];
+        uuidChars[20] = HEX_DIGITS[(int) ((leastSignificantBits & 0x0000f00000000000L) >>> 44)];
+        uuidChars[21] = HEX_DIGITS[(int) ((leastSignificantBits & 0x00000f0000000000L) >>> 40)];
+        uuidChars[22] = HEX_DIGITS[(int) ((leastSignificantBits & 0x000000f000000000L) >>> 36)];
+        uuidChars[23] = HEX_DIGITS[(int) ((leastSignificantBits & 0x0000000f00000000L) >>> 32)];
+        uuidChars[24] = HEX_DIGITS[(int) ((leastSignificantBits & 0x00000000f0000000L) >>> 28)];
+        uuidChars[25] = HEX_DIGITS[(int) ((leastSignificantBits & 0x000000000f000000L) >>> 24)];
+        uuidChars[26] = HEX_DIGITS[(int) ((leastSignificantBits & 0x0000000000f00000L) >>> 20)];
+        uuidChars[27] = HEX_DIGITS[(int) ((leastSignificantBits & 0x00000000000f0000L) >>> 16)];
+        uuidChars[28] = HEX_DIGITS[(int) ((leastSignificantBits & 0x000000000000f000L) >>> 12)];
+        uuidChars[29] = HEX_DIGITS[(int) ((leastSignificantBits & 0x0000000000000f00L) >>> 8)];
+        uuidChars[30] = HEX_DIGITS[(int) ((leastSignificantBits & 0x00000000000000f0L) >>> 4)];
+        uuidChars[31] = HEX_DIGITS[(int) (leastSignificantBits & 0x000000000000000fL)];
 
         return new String(uuidChars);
     }

@@ -34,7 +34,7 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
      * @return parsed UUID
      */
     public static UUID parseId(String withoutDashes) {
-        return FastUUID.parseUUIDUndashed(withoutDashes);
+        return FastUUID.parseUUIDUUndashed(withoutDashes);
     }
 
     /**
@@ -44,8 +44,8 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
      * @param uuidDashed uuid with dashes
      * @return parsed UUID
      */
-    public static UUID parseDashedIdFast(CharSequence uuidDashed) {
-        return FastUUID.parseUUID(uuidDashed);
+    public static UUID parseDashedId(CharSequence uuidDashed) {
+        return FastUUID.parseUUIDDashed(uuidDashed);
     }
 
     /**
@@ -62,8 +62,8 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
      * @param uniqueId UUID that should be converted
      * @return UUID with dashes
      */
-    public static String toStringFast(UUID uniqueId) {
-        return FastUUID.toString(uniqueId);
+    public static String toString(UUID uniqueId) {
+        return FastUUID.toStringDashed(uniqueId);
     }
 
     /**
