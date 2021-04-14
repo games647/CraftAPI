@@ -89,16 +89,10 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <!-- Silence aggressive Javadoc linting  -->
                         <configuration>
-                            <!-- skip when version is SNAPSHOT -->
-                            <skip>${snapshotBuild}</skip>
-                            <links>
-                                <!--Those links doesn't seem to be compatible for the javadoc plugin-->
-                                <!--GSON-->
-<!--                                <link>https://www.javadoc.io/doc/com.google.code.gson/gson/2.8.2</link>-->
-                                <!--Guava-->
-                                <link>https://google.github.io/guava/releases/24.1-jre/api/docs/</link>
-                            </links>
+                            <additionalOptions>-Xdoclint:none</additionalOptions>
+                            <additionalJOption>-Xdoclint:none</additionalJOption>
                         </configuration>
                     </execution>
                 </executions>
