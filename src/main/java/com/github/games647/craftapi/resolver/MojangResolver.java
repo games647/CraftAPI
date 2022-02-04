@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.Proxy;
 import java.net.Proxy.Type;
@@ -47,8 +48,10 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
 
     //authentication
     private static final String AUTH_URL = "https://authserver.mojang.com/authenticate";
-    private static final String HAS_JOINED_URL = "https://sessionserver.mojang.com/session/minecraft/hasJoined?" +
-            "username=%s&serverId=%s&ip=%s";
+    private static final String HAS_JOINED_URL_PROXY_CHECK = "https://sessionserver.mojang.com/session/minecraft/" +
+        "hasJoined?username=%s&serverId=%s&ip=%s";
+    private static final String HAS_JOINED_URL_RAW = "https://sessionserver.mojang.com/session/minecraft/hasJoined?" +
+            "username=%s&serverId=%s";
 
     private ProxySelector proxySelector = ProxySelector.getDefault();
 
@@ -63,8 +66,15 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     @Override
     public Optional<Verification> hasJoined(String username, String serverHash, InetAddress hostIp)
             throws IOException {
-        String encodedIP = URLEncoder.encode(hostIp.getHostAddress(), StandardCharsets.UTF_8.name());
-        String url = String.format(HAS_JOINED_URL, username, serverHash, encodedIP);
+        String url;
+        if (hostIp instanceof Inet6Address) {
+            // Mojang currently doesn't check the IPv6 address correct. The prevent-proxy even doesn't work with
+            // a vanilla server
+            url = String.format(HAS_JOINED_URL_RAW, username, serverHash);
+        } else {
+            String encodedIP = URLEncoder.encode(hostIp.getHostAddress(), StandardCharsets.UTF_8.name());
+            url = String.format(HAS_JOINED_URL_PROXY_CHECK, username, serverHash, encodedIP);
+        }
 
         HttpURLConnection conn = getConnection(url);
         int responseCode = conn.getResponseCode();
