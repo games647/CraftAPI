@@ -59,4 +59,16 @@ public class NamePredicateTest {
         assertThat(predicate.test("abc$"), is(false));
         assertThat(predicate.test("fdwadaä"), is(false));
     }
+
+    @Test
+    public void testDotName() throws Exception {
+        //https://sessionserver.mojang.com/session/minecraft/profile/97d8ecc8607b4760b1c7fb5792c45d01
+        assertThat(predicate.test("Mr.Denis"), is(true));
+    }
+
+    @Test
+    public void testDashName() throws Exception {
+        //https://sessionserver.mojang.com/session/minecraft/profile/cca4953341074ef5a196a6e67104277d
+        assertThat(predicate.test("football-flo"), is(true));
+    }
 }
