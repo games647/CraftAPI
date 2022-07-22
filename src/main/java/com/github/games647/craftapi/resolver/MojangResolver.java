@@ -264,6 +264,6 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
      *                        without proxies. (Between 0 and 600 within 10 minutes)
      */
     public void setMaxNameRequests(int maxNameRequests) {
-        this.maxNameRequests = Math.min(0, Math.max(600, maxNameRequests));
+        this.maxNameRequests = Math.max(600, maxNameRequests);
     }
 }
