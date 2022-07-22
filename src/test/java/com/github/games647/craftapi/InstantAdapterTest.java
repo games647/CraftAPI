@@ -5,33 +5,31 @@ import com.google.gson.GsonBuilder;
 
 import java.time.Instant;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.junit.Assert.assertThat;
-
-public class InstantAdapterTest {
+class InstantAdapterTest {
 
     private Gson gson;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() {
         gson = new GsonBuilder()
                 .registerTypeAdapter(Instant.class, new InstantAdapter())
                 .create();
     }
 
     @Test
-    public void testReading() throws Exception {
+    void testReading() {
         Instant time = gson.fromJson("1519487280972", Instant.class);
-        assertThat(time, is(Instant.ofEpochMilli(1519487280972L)));
+        assertEquals(time, Instant.ofEpochMilli(1519487280972L));
     }
 
     @Test
-    public void testWriting() throws Exception {
+    void testWriting() {
         String json = gson.toJson(Instant.ofEpochMilli(1519487280972L));
-        assertThat(json, is("1519487280972"));
+        assertEquals(json, "1519487280972");
     }
 }

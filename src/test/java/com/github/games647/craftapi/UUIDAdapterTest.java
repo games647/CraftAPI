@@ -2,11 +2,10 @@ package com.github.games647.craftapi;
 
 import java.util.UUID;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.core.Is.is;
-
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UUIDAdapterTest {
 
@@ -19,56 +18,62 @@ public class UUIDAdapterTest {
     private static final String JEB_MOJANG_ID = "853c80ef3c3749fdaa49938b674adae6";
 
     @Test
-    public void testOfflineUUID() throws Exception {
+    void testOfflineUUID() {
         UUID boneId = UUIDAdapter.generateOfflineId("Dinnerbone");
-        assertThat(boneId, is(UUID.fromString(DINNERBONE_OFFLINE_ID)));
+        assertEquals(boneId, UUID.fromString(DINNERBONE_OFFLINE_ID));
 
         UUID jebId = UUIDAdapter.generateOfflineId("Jeb_");
-        assertThat(jebId, is(UUID.fromString(JEB_OFFLINE_ID)));
+        assertEquals(jebId, UUID.fromString(JEB_OFFLINE_ID));
     }
 
     @Test
-    public void testMojangId() throws Exception {
+    void testMojangId() {
         UUID boneId = UUID.fromString(DINNERBONE_PREMIUM_ID);
-        assertThat(UUIDAdapter.toMojangId(boneId), is(DINNERBONE_MOJANG_ID));
+        assertEquals(UUIDAdapter.toMojangId(boneId), DINNERBONE_MOJANG_ID);
 
         UUID jebId = UUID.fromString(JEB_PREMIUM_ID);
-        assertThat(UUIDAdapter.toMojangId(jebId), is(JEB_MOJANG_ID));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testNullMojangId() throws Exception {
-        UUIDAdapter.toMojangId(null);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testNullParse() throws Exception {
-        UUIDAdapter.parseId(null);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testNullGenerate() throws Exception {
-        UUIDAdapter.generateOfflineId(null);
+        assertEquals(UUIDAdapter.toMojangId(jebId), JEB_MOJANG_ID);
     }
 
     @Test
-    public void testParsing() throws Exception {
+    void testNullMojangId() {
+        Assertions.assertThrows(NullPointerException.class,
+                () -> UUIDAdapter.toMojangId(null)
+        );
+    }
+
+    @Test
+    void testNullParse() {
+        Assertions.assertThrows(NullPointerException.class,
+                () -> UUIDAdapter.parseId(null)
+        );
+    }
+
+    @Test
+    void testNullGenerate() {
+        Assertions.assertThrows(NullPointerException.class,
+                () -> UUIDAdapter.generateOfflineId(null)
+        );
+    }
+
+    @Test
+    void testParsing() {
         UUID boneId = UUID.fromString(DINNERBONE_PREMIUM_ID);
-        assertThat(UUIDAdapter.parseId(DINNERBONE_MOJANG_ID), is(boneId));
+        assertEquals(UUIDAdapter.parseId(DINNERBONE_MOJANG_ID), boneId);
 
         UUID jebId = UUID.fromString(JEB_PREMIUM_ID);
-        assertThat(UUIDAdapter.parseId(JEB_MOJANG_ID), is(jebId));
+        assertEquals(UUIDAdapter.parseId(JEB_MOJANG_ID), jebId);
     }
 
     @Test
-    public void testParsingDashed() throws Exception {
+    void testParsingDashed() {
         UUID boneId = UUID.fromString(DINNERBONE_PREMIUM_ID);
-        assertThat(UUIDAdapter.parseDashedId(DINNERBONE_PREMIUM_ID), is(boneId));
+        assertEquals(UUIDAdapter.parseDashedId(DINNERBONE_PREMIUM_ID), boneId);
     }
 
     @Test
-    public void testToString() throws Exception {
+    void testToString() {
         UUID boneId = UUID.fromString(DINNERBONE_PREMIUM_ID);
-        assertThat(UUIDAdapter.toString(boneId), is(DINNERBONE_PREMIUM_ID));
+        assertEquals(UUIDAdapter.toString(boneId), DINNERBONE_PREMIUM_ID);
     }
 }

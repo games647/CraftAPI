@@ -2,23 +2,23 @@ package com.github.games647.craftapi.resolver;
 
 import com.github.games647.craftapi.UUIDAdapter;
 import com.github.games647.craftapi.model.skin.Model;
+import com.github.games647.craftapi.model.skin.Skin;
 import com.github.games647.craftapi.model.skin.SkinProperty;
 import com.github.games647.craftapi.model.skin.SkinPropertyTest;
-import com.github.games647.craftapi.model.skin.Skin;
 import com.github.games647.craftapi.model.skin.Texture;
 import com.github.games647.craftapi.model.skin.Texture.Type;
 
 import java.time.Instant;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.junit.Assert.assertThat;
-
-public class AbstractResolverTest {
+class AbstractResolverTest {
 
     private static final String SLIM_SIGNATURE = "71345E00F68523B8A2915E4BD70F074140E539F896AE77B4519DC2867F870082332" +
             "83ECA1FCDE68084B3985401D24DE502F4A9631D43946165AD560AA8B5AC3CEAF4033F47026609F89C2AEB9E98462C1D62A980281" +
@@ -54,68 +54,77 @@ public class AbstractResolverTest {
             "20DA371993AAF29DCD4E38658FB3868D4416A4C88ABBADBE2D6A211889BA35B2AAD9A60CFDC3ECD23499DECF656E87EC1EC125DF" +
             "4D49CB22343826D1E25B6982DE92A57386227915B1BA9BAD17A72F6801BA7D9F81AD0D35ECE0407B34AD91D70A75462EE566DA45" +
             "09BD217D460C7085784A6";
-    
+
     private AbstractResolver resolver;
 
-    @Before
-    public void setUp() throws Exception {
-        resolver = new AbstractResolver() {};
+    @BeforeEach
+    void setUp() {
+        resolver = new AbstractResolver() {
+        };
     }
 
     @Test
-    public void decodeSkinSteve() throws Exception {
+    void decodeSkinSteve() {
         SkinProperty property = new SkinProperty(SkinPropertyTest.STEVE_VALUE, SkinPropertyTest.STEVE_SIGNATURE);
         Skin skin = resolver.decodeSkin(property);
 
-        assertThat(skin.getSignature(), is(hexStringToByteArray(STEVE_SIGNATURE)));
-        
-        assertThat(skin.getTimeFetched(), is(Instant.ofEpochMilli(1517052435668L)));
-        assertThat(skin.getOwnerId(), is(UUIDAdapter.parseId("0aaa2c13922a411bb6559b8c08404695")));
-        assertThat(skin.getOwnerName(), is("games647"));
-
         Texture skinTexture = skin.getTexture(Type.SKIN).get();
-        assertThat(skinTexture.getHash(), is("a2e6a3f8caea7913ab48237beea6d6a1a6f76936e3b71af4c7a08bb61c7870"));
-        assertThat(skinTexture.getArmModel().orElse(null), is(Model.SQUARE));
+
+        assertAll(
+                () -> assertArrayEquals(skin.getSignature(), hexStringToByteArray(STEVE_SIGNATURE)),
+                () -> assertEquals(skin.getTimeFetched(), Instant.ofEpochMilli(1517052435668L)),
+                () -> assertEquals(skin.getOwnerId(), UUIDAdapter.parseId("0aaa2c13922a411bb6559b8c08404695")),
+                () -> assertEquals(skin.getOwnerName(), "games647"),
+                () -> assertEquals(
+                        skinTexture.getHash(), "a2e6a3f8caea7913ab48237beea6d6a1a6f76936e3b71af4c7a08bb61c7870"
+                ),
+                () -> assertEquals(skinTexture.getArmModel().orElse(null), Model.SQUARE)
+        );
     }
 
     @Test
-    public void decodeSkinSlim() throws Exception {
+    void decodeSkinSlim() {
         SkinProperty property = new SkinProperty(SkinPropertyTest.SLIM_VALUE, SkinPropertyTest.SLIM_SIGNATURE);
         Skin skin = resolver.decodeSkin(property);
 
-        assertThat(skin.getSignature(), is(hexStringToByteArray(SLIM_SIGNATURE)));
-        
-        assertThat(skin.getTimeFetched(), is(Instant.ofEpochMilli(1519552798232L)));
-        assertThat(skin.getOwnerId(), is(UUIDAdapter.parseId("78c3a4e837e448189df8f9ce61c5efcc")));
-        assertThat(skin.getOwnerName(), is("F0ggyMonst3r"));
-
         Texture skinTexture = skin.getTexture(Type.SKIN).get();
-        assertThat(skinTexture.getHash(), is("52847ba3eb656e7ac69f2af9cec58d4ec2f5a2ea7e18968c97907e87efa9cc4"));
-        assertThat(skinTexture.getArmModel().orElse(null), is(Model.SLIM));
+
+        assertAll(
+                () -> assertArrayEquals(skin.getSignature(), hexStringToByteArray(SLIM_SIGNATURE)),
+                () -> assertEquals(skin.getTimeFetched(), Instant.ofEpochMilli(1519552798232L)),
+                () -> assertEquals(skin.getOwnerId(), UUIDAdapter.parseId("78c3a4e837e448189df8f9ce61c5efcc")),
+                () -> assertEquals(skin.getOwnerName(), "F0ggyMonst3r"),
+                () -> assertEquals(
+                        skinTexture.getHash(), "52847ba3eb656e7ac69f2af9cec58d4ec2f5a2ea7e18968c97907e87efa9cc4"
+                ),
+                () -> assertEquals(skinTexture.getArmModel().orElse(null), Model.SLIM)
+        );
     }
 
     @Test
-    public void decodeSkinCape() throws Exception {
+    void decodeSkinCape() {
         SkinProperty property = new SkinProperty(SkinPropertyTest.CAPE_VALUE, SkinPropertyTest.CAPE_SIGNATURE);
         Skin skin = resolver.decodeSkin(property);
 
-        assertThat(skin.getSignature(), is(hexStringToByteArray(CAPE_SIGNATURE)));
-
-        assertThat(skin.getTimeFetched(), is(Instant.ofEpochMilli(1520277572322L)));
-        assertThat(skin.getOwnerId(), is(UUIDAdapter.parseId("61699b2ed3274a019f1e0ea8c3f06bc6")));
-        assertThat(skin.getOwnerName(), is("Dinnerbone"));
-
         Texture skinTexture = skin.getTexture(Type.SKIN).get();
-        assertThat(skinTexture.getHash(), is("cd6be915b261643fd13621ee4e99c9e541a551d80272687a3b56183b981fb9a"));
-        assertThat(skinTexture.getArmModel().orElse(null), is(Model.SQUARE));
-
         Texture capeTexture = skin.getTexture(Type.CAPE).get();
-        assertThat(capeTexture.getHash(), is("eec3cabfaeed5dafe61c6546297e853a547c39ec238d7c44bf4eb4a49dc1f2c0"));
-        assertThat(capeTexture.getArmModel(), is(Optional.empty()));
+
+        assertAll(
+                () -> assertArrayEquals(skin.getSignature(), hexStringToByteArray(CAPE_SIGNATURE)),
+                () -> assertEquals(skin.getTimeFetched(), Instant.ofEpochMilli(1520277572322L)),
+                () -> assertEquals(skin.getOwnerId(), UUIDAdapter.parseId("61699b2ed3274a019f1e0ea8c3f06bc6")),
+                () -> assertEquals(skin.getOwnerName(), "Dinnerbone"),
+                () -> assertEquals(
+                        skinTexture.getHash(), "cd6be915b261643fd13621ee4e99c9e541a551d80272687a3b56183b981fb9a"
+                ),
+                () -> assertEquals(skinTexture.getArmModel().orElse(null), Model.SQUARE),
+                () -> assertEquals(capeTexture.getHash(), "eec3cabfaeed5dafe61c6546297e853a547c39ec238d7c44bf4eb4a49dc1f2c0"),
+                () -> assertEquals(capeTexture.getArmModel(), Optional.empty())
+        );
     }
 
     @Test
-    public void encodeSkinSteve() throws Exception {
+    void encodeSkinSteve() {
         Skin skin = new Skin(Instant.ofEpochMilli(1517052435668L),
                 UUIDAdapter.parseId("0aaa2c13922a411bb6559b8c08404695"),
                 "games647",
@@ -124,12 +133,14 @@ public class AbstractResolverTest {
         skin.setSignature(hexStringToByteArray(STEVE_SIGNATURE));
         SkinProperty property = resolver.encodeSkin(skin);
 
-        assertThat(property.getValue(), is(SkinPropertyTest.STEVE_VALUE));
-        assertThat(property.getSignature(), is(SkinPropertyTest.STEVE_SIGNATURE));
+        assertAll(
+                () -> assertEquals(property.getValue(), SkinPropertyTest.STEVE_VALUE),
+                () -> assertEquals(property.getSignature(), SkinPropertyTest.STEVE_SIGNATURE)
+        );
     }
 
     @Test
-    public void encodeSkinSlim() throws Exception {
+    void encodeSkinSlim() {
         Skin skin = new Skin(Instant.ofEpochMilli(1519552798232L),
                 UUIDAdapter.parseId("78c3a4e837e448189df8f9ce61c5efcc"),
                 "F0ggyMonst3r",
@@ -138,12 +149,14 @@ public class AbstractResolverTest {
         skin.setSignature(hexStringToByteArray(SLIM_SIGNATURE));
         SkinProperty property = resolver.encodeSkin(skin);
 
-        assertThat(property.getValue(), is(SkinPropertyTest.SLIM_VALUE));
-        assertThat(property.getSignature(), is(SkinPropertyTest.SLIM_SIGNATURE));
+        assertAll(
+                () -> assertEquals(property.getValue(), SkinPropertyTest.SLIM_VALUE),
+                () -> assertEquals(property.getSignature(), SkinPropertyTest.SLIM_SIGNATURE)
+        );
     }
 
     @Test
-    public void encodeSkinCape() throws Exception {
+    void encodeSkinCape() {
         Skin skin = new Skin(Instant.ofEpochMilli(1520277572322L),
                 UUIDAdapter.parseId("61699b2ed3274a019f1e0ea8c3f06bc6"),
                 "Dinnerbone",
@@ -152,8 +165,10 @@ public class AbstractResolverTest {
         skin.setSignature(hexStringToByteArray(CAPE_SIGNATURE));
         SkinProperty property = resolver.encodeSkin(skin);
 
-        assertThat(property.getValue(), is(SkinPropertyTest.CAPE_VALUE));
-        assertThat(property.getSignature(), is(SkinPropertyTest.CAPE_SIGNATURE));
+        assertAll(
+                () -> assertEquals(property.getValue(), SkinPropertyTest.CAPE_VALUE),
+                () -> assertEquals(property.getSignature(), SkinPropertyTest.CAPE_SIGNATURE)
+        );
     }
 
     private static byte[] hexStringToByteArray(String hexString) {
@@ -161,7 +176,7 @@ public class AbstractResolverTest {
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
             data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
-                    + Character.digit(hexString.charAt(i+1), 16));
+                    + Character.digit(hexString.charAt(i + 1), 16));
         }
 
         return data;

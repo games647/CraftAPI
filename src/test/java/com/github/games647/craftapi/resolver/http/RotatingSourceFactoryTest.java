@@ -7,33 +7,32 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.junit.Assert.assertThat;
-
-public class RotatingSourceFactoryTest {
+class RotatingSourceFactoryTest {
 
     private RotatingSourceFactory sslFactory;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() {
         sslFactory = new RotatingSourceFactory();
     }
 
     @Test
-    public void testDefault() throws Exception {
+    void testDefault() throws Exception {
         try (Socket socket = sslFactory.createSocket()) {
-            assertThat(socket.getLocalAddress(), notNullValue());
-            assertThat(socket.getLocalAddress().isAnyLocalAddress(), is(true));
+            assertNotNull(socket.getLocalAddress());
+            assertTrue(socket.getLocalAddress().isAnyLocalAddress());
         }
     }
 
     @Test
-    public void testRotating() throws Exception {
+    void testRotating() throws Exception {
         List<InetAddress> localAddresses = new ArrayList<>();
         localAddresses.add(InetAddress.getByName("192.168.0.1"));
         localAddresses.add(InetAddress.getByName("192.168.0.2"));
@@ -43,19 +42,19 @@ public class RotatingSourceFactoryTest {
 
         for (int i = 1; i <= 4; i++) {
             Optional<InetAddress> localAddress = sslFactory.getNextLocalAddress();
-            assertThat(localAddress.isPresent(), is(true));
-            assertThat(localAddress.get(), is(localAddresses.get((i - 1) % localAddresses.size())));
+            assertTrue(localAddress.isPresent());
+            assertEquals(localAddress.get(), localAddresses.get((i - 1) % localAddresses.size()));
         }
     }
 
     @Test
-    public void testCollectionModification() throws Exception {
+    void testCollectionModification() throws Exception {
         Collection<InetAddress> localAddresses = new ArrayList<>();
         localAddresses.add(InetAddress.getByName("192.168.0.1"));
 
         sslFactory.setOutgoingAddresses(localAddresses);
         localAddresses.clear();
 
-        assertThat(sslFactory.getNextLocalAddress().isPresent(), is(true));
+        assertTrue(sslFactory.getNextLocalAddress().isPresent());
     }
 }

@@ -1,74 +1,92 @@
 package com.github.games647.craftapi;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.junit.Assert.assertThat;
-
-public class NamePredicateTest {
+class NamePredicateTest {
 
     private NamePredicate predicate;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() {
         predicate = new NamePredicate();
     }
 
-    @Test
-    public void testValidSimple() throws Exception {
-        assertThat(predicate.test("abcdwef"), is(true));
-        assertThat(predicate.test("zezvw"), is(true));
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "abcdwef",
+            "zezvw"
+    })
+    void testValidSimple(String name) {
+        assertTrue(predicate.test(name));
     }
 
     @Test
-    public void testValidUnderscore() throws Exception {
-        assertThat(predicate.test("rashomon_"), is(true));
+    void testValidUnderscore() {
+        assertTrue(predicate.test("rashomon_"));
     }
 
     @Test
-    public void testDifferentCasing() throws Exception {
-        assertThat(predicate.test("FoggyMonster"), is(true));
+    void testDifferentCasing() {
+        assertTrue(predicate.test("FoggyMonster"));
     }
 
     @Test
-    public void testNumbers() throws Exception {
-        assertThat(predicate.test("F0ggyMonst3r"), is(true));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testNull() throws Exception {
-        assertThat(predicate.test(null), is(false));
+    void testNumbers() {
+        assertTrue(predicate.test("F0ggyMonst3r"));
     }
 
     @Test
-    public void testValidLength() throws Exception {
-        assertThat(predicate.test("12"), is(true));
-        assertThat(predicate.test("1234567890123456"), is(true));
+    void testNull() {
+        assertThrows(NullPointerException.class,
+                () -> predicate.test(null)
+        );
     }
 
-    @Test
-    public void testInvalidLength() throws Exception {
-        assertThat(predicate.test(""), is(false));
-        assertThat(predicate.test("12345678901234567"), is(false));
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "12",
+            "1234567890123456"
+    })
+    void testValidLength(String name) {
+        assertTrue(predicate.test(name));
     }
 
-    @Test
-    public void testInvalidCharacters() throws Exception {
-        assertThat(predicate.test("abc$"), is(false));
-        assertThat(predicate.test("fdwadaä"), is(false));
+    @ParameterizedTest
+    @EmptySource
+    @ValueSource(strings = {
+            "12345678901234567"
+    })
+    void testInvalidLength(String name) {
+        assertFalse(predicate.test(name));
     }
 
-    @Test
-    public void testDotName() throws Exception {
-        //https://sessionserver.mojang.com/session/minecraft/profile/97d8ecc8607b4760b1c7fb5792c45d01
-        assertThat(predicate.test("Mr.Denis"), is(true));
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "abc$",
+            "fdwadaä"
+    })
+    void testInvalidCharacters(String name) {
+        assertFalse(predicate.test(name));
     }
 
-    @Test
-    public void testDashName() throws Exception {
-        //https://sessionserver.mojang.com/session/minecraft/profile/cca4953341074ef5a196a6e67104277d
-        assertThat(predicate.test("football-flo"), is(true));
+    @ParameterizedTest
+    @ValueSource(strings = {
+            //dot
+            //https://sessionserver.mojang.com/session/minecraft/profile/97d8ecc8607b4760b1c7fb5792c45d01
+            "Mr.Denis",
+            // dash
+            //https://sessionserver.mojang.com/session/minecraft/profile/cca4953341074ef5a196a6e67104277d
+            "football-flo"
+    })
+    void testValidName(String name) {
+        assertTrue(predicate.test(name));
     }
 }

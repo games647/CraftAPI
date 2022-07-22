@@ -13,12 +13,11 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.core.Is.is;
-
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SkinPropertyTest {
 
@@ -68,43 +67,43 @@ public class SkinPropertyTest {
 
     private PublicKey publicKey;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         this.publicKey = loadPublicKey();
     }
 
     @Test
-    public void testVerify() throws Exception {
+    void testVerify() throws Exception {
         SkinProperty property = new SkinProperty(STEVE_VALUE, STEVE_SIGNATURE);
-        assertThat(property.isValid(publicKey), is(true));
+        assertTrue(property.isValid(publicKey));
     }
 
     @Test
-    public void testVerifySlim() throws Exception {
+    void testVerifySlim() throws Exception {
         SkinProperty property = new SkinProperty(SLIM_VALUE, SLIM_SIGNATURE);
-        assertThat(property.isValid(publicKey), is(true));
+        assertTrue(property.isValid(publicKey));
     }
 
     @Test
-    public void testVerifyCape() throws Exception {
+    void testVerifyCape() throws Exception {
         SkinProperty property = new SkinProperty(CAPE_VALUE, CAPE_SIGNATURE);
-        assertThat(property.isValid(publicKey), is(true));
+        assertTrue(property.isValid(publicKey));
     }
 
     @Test
-    public void testVerifyCustomPublic() throws Exception {
+    void testVerifyCustomPublic() throws Exception {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance(KEY_ALG);
         keyGen.initialize(KEY_SIZE);
         publicKey = keyGen.generateKeyPair().getPublic();
 
         SkinProperty property = new SkinProperty(STEVE_VALUE, STEVE_SIGNATURE);
-        assertThat(property.isValid(publicKey), is(false));
+        assertFalse(property.isValid(publicKey));
     }
 
     @Test
-    public void testVerifyInvalid() throws Exception {
+    void testVerifyInvalid() throws Exception {
         SkinProperty property = new SkinProperty(STEVE_VALUE, SLIM_SIGNATURE);
-        assertThat(property.isValid(publicKey), is(false));
+        assertFalse(property.isValid(publicKey));
     }
 
     private static PublicKey loadPublicKey() throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
@@ -115,9 +114,7 @@ public class SkinPropertyTest {
     }
 
     private static byte[] readAllBytes(URL url) throws IOException {
-        try (
-                BufferedInputStream in = new BufferedInputStream(url.openStream())
-        ) {
+        try (BufferedInputStream in = new BufferedInputStream(url.openStream())) {
             return ByteStreams.toByteArray(in);
         }
     }

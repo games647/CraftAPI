@@ -7,79 +7,82 @@ import com.github.games647.craftapi.model.skin.SkinPropertyTest;
 import java.time.Duration;
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.junit.Assert.assertThat;
-
-public class MemoryCacheTest {
+class MemoryCacheTest {
 
     private Cache cache;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() {
         cache = new MemoryCache(Duration.ofSeconds(1), 1, Duration.ofSeconds(1), 1);
     }
 
     @Test
-    public void maxSizeProfile() throws Exception {
-        assertThat(cache.getCachedProfiles().size(), is(0));
+    void maxSizeProfile() {
+        assertEquals(cache.getCachedProfiles().size(), 0);
 
         cache.add(new Profile(UUID.randomUUID(), "1"));
         cache.add(new Profile(UUID.randomUUID(), "2"));
 
-        assertThat(cache.getCachedProfiles().size(), is(1));
+        assertEquals(cache.getCachedProfiles().size(), 1);
     }
 
     @Test
-    public void maxSizeSkin() throws Exception {
-        assertThat(cache.getCachedSkins().size(), is(0));
+    void maxSizeSkin() {
+        assertEquals(cache.getCachedSkins().size(), 0);
 
         SkinProperty property1 = new SkinProperty(SkinPropertyTest.STEVE_VALUE, SkinPropertyTest.STEVE_SIGNATURE);
         SkinProperty property2 = new SkinProperty(SkinPropertyTest.SLIM_VALUE, SkinPropertyTest.SLIM_SIGNATURE);
         cache.addSkin(UUID.randomUUID(), property1);
         cache.addSkin(UUID.randomUUID(), property2);
 
-        assertThat(cache.getCachedSkins().size(), is(1));
+        assertEquals(cache.getCachedSkins().size(), 1);
     }
 
     @Test
-    public void addSkin() throws Exception {
+    void addSkin() {
         UUID profileId = UUID.randomUUID();
 
-        assertThat(cache.getSkin(profileId).isPresent(), is(false));
+        assertFalse(cache.getSkin(profileId).isPresent());
 
         SkinProperty property = new SkinProperty(SkinPropertyTest.STEVE_VALUE, SkinPropertyTest.STEVE_SIGNATURE);
         cache.addSkin(profileId, property);
 
-        assertThat(cache.getSkin(profileId).get(), is(property));
+        assertEquals(cache.getSkin(profileId).get(), property);
     }
 
     @Test
-    public void addProfile() throws Exception {
+    void addProfile() {
         Profile profile = new Profile(UUID.randomUUID(), "abc");
 
-        assertThat(cache.getById(profile.getId()).isPresent(), is(false));
+        assertFalse(cache.getById(profile.getId()).isPresent());
         cache.add(profile);
 
-        assertThat(cache.getById(profile.getId()).get(), is(profile));
+        assertEquals(cache.getById(profile.getId()).get(), profile);
     }
 
     @Test
-    public void profileCaseInsensitive() throws Exception {
+    void profileCaseInsensitive() {
         Profile profile = new Profile(UUID.randomUUID(), "123ABC_abc");
         cache.add(profile);
 
         //all lower case + all upper case + mixed
-        assertThat(cache.getByName("123abc_abc").orElse(null), is(profile));
-        assertThat(cache.getByName("123ABC_ABC").orElse(null), is(profile));
-        assertThat(cache.getByName("123abc_ABC").orElse(null), is(profile));
+        assertAll(
+                () -> assertEquals(cache.getByName("123abc_abc").orElse(null), profile),
+                () -> assertEquals(cache.getByName("123ABC_ABC").orElse(null), profile),
+                () -> assertEquals(cache.getByName("123abc_ABC").orElse(null), profile)
+        );
     }
 
     @Test
-    public void clear() throws Exception {
+    void clear() {
         Profile profile = new Profile(UUID.randomUUID(), "123ABC_abc");
         cache.add(profile);
 
@@ -87,35 +90,41 @@ public class MemoryCacheTest {
         cache.addSkin(profile.getId(), property);
 
         cache.clear();
-        assertThat(cache.getByName(profile.getName()).isPresent(), is(false));
-        assertThat(cache.getById(profile.getId()).isPresent(), is(false));
-        assertThat(cache.getSkin(profile.getId()).isPresent(), is(false));
+        assertAll(
+                () -> assertFalse(cache.getByName(profile.getName()).isPresent()),
+                () -> assertFalse(cache.getById(profile.getId()).isPresent()),
+                () -> assertFalse(cache.getSkin(profile.getId()).isPresent())
+        );
     }
 
     @Test
-    public void removeProfile() throws Exception {
+    void removeProfile() {
         Profile testProfile = new Profile(UUID.randomUUID(), "123ABC_abc");
         cache.add(testProfile);
 
         cache.remove(new Profile(UUID.randomUUID(), "123"));
-        assertThat(cache.getById(testProfile.getId()).isPresent(), is(true));
-        assertThat(cache.getByName(testProfile.getName()).isPresent(), is(true));
+        assertAll(
+                () -> assertTrue(cache.getById(testProfile.getId()).isPresent()),
+                () -> assertTrue(cache.getByName(testProfile.getName()).isPresent())
+        );
 
         cache.remove(testProfile);
-        assertThat(cache.getById(testProfile.getId()).isPresent(), is(false));
-        assertThat(cache.getByName(testProfile.getName()).isPresent(), is(false));
+        assertAll(
+                () -> assertFalse(cache.getById(testProfile.getId()).isPresent()),
+                () -> assertFalse(cache.getByName(testProfile.getName()).isPresent())
+        );
     }
 
     @Test
-    public void removeSkin() throws Exception {
+    void removeSkin() {
         UUID profileId = UUID.randomUUID();
         SkinProperty property = new SkinProperty(SkinPropertyTest.STEVE_VALUE, SkinPropertyTest.STEVE_SIGNATURE);
         cache.addSkin(profileId, property);
 
         cache.removeSkin(UUID.randomUUID());
-        assertThat(cache.getSkin(profileId).isPresent(), is(true));
+        assertTrue(cache.getSkin(profileId).isPresent());
 
         cache.removeSkin(profileId);
-        assertThat(cache.getSkin(profileId).isPresent(), is(false));
+        assertFalse(cache.getSkin(profileId).isPresent());
     }
 }
