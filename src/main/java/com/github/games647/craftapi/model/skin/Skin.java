@@ -1,7 +1,6 @@
 package com.github.games647.craftapi.model.skin;
 
 import com.github.games647.craftapi.model.skin.Texture.Type;
-import com.google.common.base.Strings;
 
 import java.time.Instant;
 import java.util.EnumMap;
@@ -36,11 +35,11 @@ public class Skin {
         this.profileId = uuid;
         this.profileName = name;
 
-        if (!Strings.isNullOrEmpty(skinHash)) {
+        if (skinHash != null && !skinHash.isEmpty()) {
             textures.put(Type.SKIN, new Texture(skinHash, skinModel));
         }
 
-        if (!Strings.isNullOrEmpty(capeHash)) {
+        if (capeHash != null && !capeHash.isEmpty()) {
             textures.put(Type.CAPE, new Texture(Type.CAPE, capeHash));
         }
     }
