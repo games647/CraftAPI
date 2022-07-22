@@ -2,7 +2,7 @@ package com.github.games647.craftapi.cache;
 
 import com.github.games647.craftapi.model.Profile;
 import com.github.games647.craftapi.model.skin.SkinProperty;
-import com.google.common.cache.CacheLoader;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableSet;
 
 import java.time.Duration;
@@ -105,7 +105,7 @@ public class MemoryCache implements Cache {
     }
 
     private <K, V> ConcurrentMap<K, V> buildCache(long expireAfterWrite, int maxSize) {
-        SafeCacheBuilder<Object, Object> builder = SafeCacheBuilder.newBuilder();
+        CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder();
 
         if (expireAfterWrite > 0) {
             builder.expireAfterWrite(expireAfterWrite, TimeUnit.SECONDS);
@@ -115,8 +115,7 @@ public class MemoryCache implements Cache {
             builder.maximumSize(maxSize);
         }
 
-        return builder.build(CacheLoader.from(() -> {
-            throw new UnsupportedOperationException();
-        }));
+        com.google.common.cache.Cache<K, V> cache = builder.build();
+        return cache.asMap();
     }
 }
