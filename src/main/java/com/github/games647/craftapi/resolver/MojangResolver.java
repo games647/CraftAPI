@@ -10,6 +10,9 @@ import com.github.games647.craftapi.model.auth.Verification;
 import com.github.games647.craftapi.model.skin.Model;
 import com.github.games647.craftapi.model.skin.SkinProperty;
 import com.github.games647.craftapi.model.skin.Textures;
+import com.github.games647.craftapi.resolver.ratelimiter.RateLimiter;
+import com.github.games647.craftapi.resolver.ratelimiter.TickingRateLimiter;
+import com.google.common.base.Ticker;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -31,6 +34,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Resolver that contacts Mojang.
@@ -56,12 +60,10 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
     private ProxySelector proxySelector = ProxySelector.getDefault();
 
     private int maxNameRequests = 600;
-    //todo: implement custom rate limiter that cleans up on size checking
-    // private final Map<Object, Object> requests = SafeCacheBuilder.newBuilder()
-    //         .expireAfterWrite(10, TimeUnit.MINUTES)
-    //         .build(CacheLoader.from(() -> {
-    //             throw new UnsupportedOperationException();
-    //         }));
+    private RateLimiter profileLimiter = new TickingRateLimiter(
+            Ticker.systemTicker(), maxNameRequests,
+            TimeUnit.MINUTES.toMillis(10)
+    );
 
     @Override
     public Optional<Verification> hasJoined(String username, String serverHash, InetAddress hostIp)
@@ -169,7 +171,12 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
         }
 
         String url = UUID_URL + name;
-        HttpURLConnection conn = getConnection(url);
+        HttpURLConnection conn;
+        if (profileLimiter.tryAcquire()) {
+            conn = getConnection(url);
+        } else {
+            conn = getProxyConnection(url);
+        }
 
         int responseCode = conn.getResponseCode();
         if (responseCode == RateLimitException.RATE_LIMIT_RESPONSE_CODE) {

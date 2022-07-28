@@ -115,7 +115,6 @@ public class MemoryCache implements Cache {
             builder.maximumSize(maxSize);
         }
 
-        com.google.common.cache.Cache<K, V> cache = builder.build();
-        return cache.asMap();
+        return builder.<K, V>build().asMap();
     }
 }
