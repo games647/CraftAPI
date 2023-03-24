@@ -61,9 +61,7 @@ class NamePredicateTest {
 
     @ParameterizedTest
     @EmptySource
-    @ValueSource(strings = {
-            "12345678901234567"
-    })
+    @ValueSource(strings = "12345678901234567")
     void testInvalidLength(String name) {
         assertFalse(predicate.test(name));
     }

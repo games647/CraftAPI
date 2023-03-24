@@ -316,7 +316,7 @@ public class FastUUID {
             if (HEX_VALUES[c] < 0) {
                 throw new IllegalArgumentException("Illegal hexadecimal digit: " + c);
             }
-        } catch (final ArrayIndexOutOfBoundsException e) {
+        } catch (final ArrayIndexOutOfBoundsException boundsException) {
             throw new IllegalArgumentException("Illegal hexadecimal digit: " + c);
         }
 

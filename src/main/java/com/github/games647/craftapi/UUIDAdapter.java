@@ -33,7 +33,7 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
      * @param withoutDashes uuid without dashes
      * @return parsed UUID
      */
-    public static UUID parseId(String withoutDashes) {
+    public static UUID parseId(CharSequence withoutDashes) {
         return FastUUID.parseUUIDUUndashed(withoutDashes);
     }
 
