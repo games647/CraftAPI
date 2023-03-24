@@ -80,7 +80,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
 
         HttpURLConnection conn = getConnection(url);
         int responseCode = conn.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
+        if (responseCode == HttpURLConnection.HTTP_NOT_FOUND || responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
             return Optional.empty();
         }
 
@@ -188,7 +188,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
             responseCode = conn.getResponseCode();
         }
 
-        if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
+        if (responseCode == HttpURLConnection.HTTP_NOT_FOUND || responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
             return Optional.empty();
         }
 
@@ -224,7 +224,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
             throw new RateLimitException();
         }
 
-        if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
+        if (responseCode == HttpURLConnection.HTTP_NOT_FOUND || responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
             return Optional.empty();
         }
 
