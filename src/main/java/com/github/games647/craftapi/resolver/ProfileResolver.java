@@ -44,7 +44,7 @@ public interface ProfileResolver {
      *
      * @param name case-insensitive name
      * @param time timestamp the player had this name or {@link Instant#ofEpochMilli(long)} with 0 for the current name
-     * @return the profile or empty if the player didn't changed the name or isn't premium
+     * @return the profile or empty if the player didn't change the name or isn't premium
      * @throws IOException I/O error on fetching the skin
      * @throws RateLimitException more than 600 name to UUID requests within 10 minutes
      * (if using proxies including for the chosen proxy)

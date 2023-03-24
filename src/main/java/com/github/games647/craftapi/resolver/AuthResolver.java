@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface AuthResolver {
 
     /**
-     * Verifies if a player requesting to join a online mode server is actually authenticated against Mojang.
+     * Verifies if a player requesting to join an online mode server is actually authenticated against Mojang.
      *
      * @param username the joining username
      * @param serverHash server id hash
@@ -38,7 +38,7 @@ public interface AuthResolver {
     Account authenticate(String email, String password) throws IOException, InvalidCredentialsException;
 
     /**
-     * Changes the skin to the image that can be download from that URL. The URL have to be direct link without
+     * Changes the skin to the image that can be downloaded from that URL. The URL have to be direct link without
      * things like HTML in it.
      *
      * @param account authenticated account

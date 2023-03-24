@@ -3,12 +3,12 @@
 ## Description
 
 This is Minecraft library for contacting the Mojang API. It features modern features of Java and flexible way of
-communicating with Mojang. Furthermore this project is used for experimenting with Unit-Tests.
+communicating with Mojang. Furthermore, this project is used for experimenting with Unit-Tests.
 
 ## Features
 
 * Minimal requirements to integrate it into Sponge, BungeeCord and Spigot
-* Compatibility with Mineacraft 1.7.10+
+* Compatibility with Minecraft 1.7.10+
 * Thread-Safe
 * Usage of modern Java 8 features
 * UUID and skin querying
@@ -38,7 +38,7 @@ communicating with Mojang. Furthermore this project is used for experimenting wi
 ## Contribution
 
 This project is open for suggestions (including breaking changes between major version) and contributions. If you have 
-an idea to make this library, you are welcome to create a issue ticker or pull request. Please provide units for pull 
+an idea to make this library, you are welcome to create an issue ticker or pull request. Please provide units for pull 
 requests if possible.
 
 ## Maven repository
@@ -73,7 +73,6 @@ Inspired by
 [GameProfileManager](https://jd.spongepowered.org/7.0.0/org/spongepowered/api/profile/GameProfileManager.html)
 [GameProfileCache](https://jd.spongepowered.org/7.0.0/org/spongepowered/api/profile/GameProfileCache.html)
 * [SquirrelId](https://github.com/EngineHub/SquirrelID)
-* [Mojang's Authlib](https://github.com/Techcable/Authlib)
-* [Mojang's AccountsClient](https://github.com/JonMcPherson/AccountsClient/)
+* [Mojang Authlib](https://github.com/Techcable/Authlib)
+* [Mojang AccountsClient](https://github.com/JonMcPherson/AccountsClient/)
 * [API proxy Interceptor](https://github.com/Shevchik/MojangAPIProxy)
-

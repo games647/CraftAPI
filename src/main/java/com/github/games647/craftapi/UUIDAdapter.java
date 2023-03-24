@@ -11,7 +11,7 @@ import java.util.UUID;
 
 /**
  * Type adapter for converting UUIDs from Mojang's string representation into a Java version.
- *
+ * <p>
  * It uses a faster UUID implementation for toString() (if < Java 9) outputs and dashed UUIDs parsing.
  */
 public class UUIDAdapter extends TypeAdapter<UUID> {
@@ -29,7 +29,7 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
     }
 
     /**
-     * Converts a Mojang UUID (UUID without dashes) into an Java representation of the UUID.
+     * Converts a Mojang UUID (UUID without dashes) into a Java representation of the UUID.
      * @param withoutDashes uuid without dashes
      * @return parsed UUID
      */
@@ -67,7 +67,7 @@ public class UUIDAdapter extends TypeAdapter<UUID> {
     }
 
     /**
-     * Generates the offline/cracked UUID based on the playername. This method is equal to the server side
+     * Generates the offline/cracked UUID based on the player name. This method is equal to the server side
      * implementation if the server is in offline mode.
      * @param playerName case-sensitive player name
      * @return offline/cracked UUID

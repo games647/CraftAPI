@@ -29,7 +29,7 @@ public class Textures {
     }
 
     /**
-     * @return case-senstive player name of the owner
+     * @return case-sensitive player name of the owner
      */
     public String getName() {
         return name;

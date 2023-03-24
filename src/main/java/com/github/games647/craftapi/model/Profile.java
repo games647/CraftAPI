@@ -15,7 +15,7 @@ public class Profile {
      * Mojang premium game profile
      *
      * @param id premium UUID
-     * @param name case-sentive player name
+     * @param name case-sensitive player name
      */
     public Profile(UUID id, String name) {
         this.id = id;

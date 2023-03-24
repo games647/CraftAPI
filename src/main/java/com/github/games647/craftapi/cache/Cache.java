@@ -37,7 +37,7 @@ public interface Cache {
     /**
      * Invalidate skin from cache.
      *
-     * @param uniqueId skin owner Id
+     * @param uniqueId skin owner id
      */
     void removeSkin(UUID uniqueId);
 

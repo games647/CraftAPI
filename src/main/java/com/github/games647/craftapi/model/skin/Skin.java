@@ -59,7 +59,7 @@ public class Skin {
     }
 
     /**
-     * @return user name of the skin owner
+     * @return username of the skin owner
      */
     public String getOwnerName() {
         return profileName;
@@ -67,7 +67,7 @@ public class Skin {
 
     /**
      * @param type requesting skin component
-     * @return skin, cape, elytra data or Optional.empty if the player doesn't have this attribute
+     * @return skin, cape, elytra data or {@code Optional.empty()} if the player doesn't have this attribute
      */
     public Optional<Texture> getTexture(Type type) {
         Texture value = textures.get(type);

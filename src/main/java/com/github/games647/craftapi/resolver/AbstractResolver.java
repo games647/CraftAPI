@@ -160,8 +160,8 @@ public abstract class AbstractResolver {
      * fully consumed and closed ({@link HttpURLConnection#getInputStream()} and
      * {@link HttpURLConnection#getErrorStream()}).
      * <p>
-     * By default Java will consume part of the input stream if not fully read, but it doesn't apply to error streams
-     * and the connection still have to be closed nevertheless. Furthermore a connection implicitly opened by
+     * By default, Java will consume part of the input stream if not fully read, but it doesn't apply to error streams
+     * and the connection still have to be closed nevertheless. Furthermore, a connection implicitly opened by
      * {@link HttpURLConnection#getResponseCode()} or {@link HttpURLConnection#getOutputStream()}} should also be
      * consumed and closed by this.
      *

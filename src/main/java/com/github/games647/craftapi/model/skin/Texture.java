@@ -55,7 +55,7 @@ public class Texture {
         }
 
         if (metadata != null) {
-            //check if there more metadata besides the model
+            //check if there are more metadata besides the model
             return Optional.ofNullable(metadata.getOrDefault("model", Model.SQUARE));
         }
 
@@ -72,7 +72,7 @@ public class Texture {
 
     /**
      * @return url without the Mojang prefix.
-     *          Example: http://textures.minecraft.net/texture/HASH to HASH
+     *          Example: <a href="http://textures.minecraft.net/texture/HASH">...</a> to HASH
      */
     public String getHash() {
         String path = url.getPath();
