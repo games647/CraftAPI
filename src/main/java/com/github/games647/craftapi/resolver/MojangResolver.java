@@ -18,6 +18,7 @@ import com.google.common.collect.ImmutableSet;
 
 import java.awt.image.RenderedImage;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -178,24 +179,29 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
             conn = getProxyConnection(url);
         }
 
-        int responseCode = conn.getResponseCode();
-        if (responseCode == RateLimitException.RATE_LIMIT_RESPONSE_CODE) {
-            if (conn.usingProxy()) {
-                throw new RateLimitException();
+        try {
+            int responseCode = conn.getResponseCode();
+            if (responseCode == RateLimitException.RATE_LIMIT_RESPONSE_CODE) {
+                if (conn.usingProxy()) {
+                    throw new RateLimitException();
+                }
+
+                conn = getProxyConnection(url);
+                responseCode = conn.getResponseCode();
             }
 
-            conn = getProxyConnection(url);
-            responseCode = conn.getResponseCode();
-        }
+            if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
+                return Optional.empty();
+            }
 
-        if (responseCode == HttpURLConnection.HTTP_NOT_FOUND || responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
+            //todo: print errorstream on IOException
+            Profile profile = readJson(conn.getInputStream(), Profile.class);
+            cache.add(profile);
+            return Optional.of(profile);
+        } catch (FileNotFoundException fileNotFoundException) {
+            //new API treats not found as cracked
             return Optional.empty();
         }
-
-        //todo: print errorstream on IOException
-        Profile profile = readJson(conn.getInputStream(), Profile.class);
-        cache.add(profile);
-        return Optional.of(profile);
     }
 
     @Override
@@ -224,7 +230,7 @@ public class MojangResolver extends AbstractResolver implements AuthResolver, Pr
             throw new RateLimitException();
         }
 
-        if (responseCode == HttpURLConnection.HTTP_NOT_FOUND || responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
+        if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
             return Optional.empty();
         }
 
