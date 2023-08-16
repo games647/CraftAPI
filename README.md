@@ -68,6 +68,7 @@ requests if possible.
   * Remember to include its license file
 
 Inspired by me
+Me, myself and I
 
 * Sponge's
 [GameProfileManager](https://jd.spongepowered.org/7.0.0/org/spongepowered/api/profile/GameProfileManager.html)
