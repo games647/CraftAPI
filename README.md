@@ -7,6 +7,7 @@ communicating with Mojang. Furthermore, this project is used for experimenting w
 
 ## Features
 hello
+hemlo
 * Minimal requirements to integrate it into Sponge, BungeeCord and Spigot
 * Compatibility with Minecraft 1.7.10+
 * Thread-Safe
