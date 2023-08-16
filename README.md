@@ -38,7 +38,7 @@ communicating with Mojang. Furthermore, this project is used for experimenting w
 ## Contribution
 
 This project is open for suggestions (including breaking changes between major version) and contributions. If you have 
-an idea to make this library, you are welcome to create an issue ticker or pull request. Please provide units for pull 
+idea to make this library, you are welcome to create an issue ticker or pull request. Please provide units for pull 
 requests if possible.
 
 ## Maven repository
@@ -70,6 +70,7 @@ requests if possible.
 Inspired by
 
 * Sponge's
+
 [GameProfileManager](https://jd.spongepowered.org/7.0.0/org/spongepowered/api/profile/GameProfileManager.html)
 [GameProfileCache](https://jd.spongepowered.org/7.0.0/org/spongepowered/api/profile/GameProfileCache.html)
 * [SquirrelId](https://github.com/EngineHub/SquirrelID)
