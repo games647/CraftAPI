@@ -75,4 +75,4 @@ Inspired by
 * [SquirrelId](https://github.com/EngineHub/SquirrelID)
 * [Mojang Authlib](https://github.com/Techcable/Authlib)
 * [Mojang AccountsClient](https://github.com/JonMcPherson/AccountsClient/)
-* [API proxy Interceptor](https://github.com/Shevchik/MojangAPIProxy)
+* [API proxy Interceptor](https://github.com/Shevchik/MojangAPIProxy0)
