@@ -67,7 +67,7 @@ requests if possible.
 * [Fast-UUID](https://github.com/jchambers/fast-uuid) - MIT license
   * Remember to include its license file
 
-Inspired by
+Inspired by me
 
 * Sponge's
 [GameProfileManager](https://jd.spongepowered.org/7.0.0/org/spongepowered/api/profile/GameProfileManager.html)
