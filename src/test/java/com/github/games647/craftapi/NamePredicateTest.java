@@ -69,14 +69,7 @@ class NamePredicateTest {
     @ParameterizedTest
     @ValueSource(strings = {
             "abc$",
-            "fdwadaä"
-    })
-    void testInvalidCharacters(String name) {
-        assertFalse(predicate.test(name));
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {
+            "fdwadaä",
             //dot
             //https://sessionserver.mojang.com/session/minecraft/profile/97d8ecc8607b4760b1c7fb5792c45d01
             "Mr.Denis",
@@ -84,7 +77,7 @@ class NamePredicateTest {
             //https://sessionserver.mojang.com/session/minecraft/profile/cca4953341074ef5a196a6e67104277d
             "football-flo"
     })
-    void testValidName(String name) {
-        assertTrue(predicate.test(name));
+    void testInvalidCharacters(String name) {
+        assertFalse(predicate.test(name));
     }
 }

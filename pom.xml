@@ -7,7 +7,7 @@
     <packaging>jar</packaging>
 
     <name>CraftAPI</name>
-    <version>0.6.2</version>
+    <version>0.7</version>
     <inceptionYear>2018</inceptionYear>
 
     <url>https://github.com/games647/CraftAPI/</url>
@@ -18,11 +18,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!--Default variable if snapshot builds cannot be detected by the build-helper plugin-->
         <snapshotBuild>false</snapshotBuild>
-
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.release>8</maven.compiler.release>
     </properties>
 
@@ -58,7 +54,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <id>build-helper-regex-is-snapshot-used</id>
@@ -81,8 +77,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <!--Require 3+ for compatibility with the newest Maven version-->
-                <version>3.5.0</version>
+                <version>3.6.3</version>
                 <executions>
                     <execution>
                         <id>javadoc-jar</id>
@@ -102,11 +97,11 @@
             <!-- junit 5 support-->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.2.5</version>
             </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.2.5</version>
             </plugin>
         </plugins>
     </build>
